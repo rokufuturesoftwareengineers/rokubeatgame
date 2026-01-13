@@ -172,14 +172,4 @@ START_MENU → SONG_SELECT → PLAYING → RESULTS
 
 ---
 
-## 📝 License
 
-This project is for educational purposes. Do not include copyrighted songs.
-
----
-
-## 🙏 Credits
-
-- Inspired by [Web-Osu-Mania](https://github.com/HecticKiwi/Web-Osu-Mania)
-- Built for Roku with BrightScript & SceneGraph
-- Beatmap generation powered by [librosa](https://librosa.org/)
