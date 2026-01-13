@@ -1,0 +1,20 @@
+# Beatmap Generator Dependencies
+# Install with: pip install -r requirements.txt
+
+# Core audio analysis library
+librosa>=0.10.0
+
+# Numerical computing (required by librosa)
+numpy>=1.23.0
+
+# Audio file I/O backend for librosa
+soundfile>=0.12.0
+
+# Additional audio format support (MP3, etc.)
+audioread>=3.0.0
+
+# Progress bars for long audio processing (optional but nice to have)
+tqdm>=4.65.0
+
+# Resampling library (used by librosa for audio processing)
+soxr>=0.3.0
