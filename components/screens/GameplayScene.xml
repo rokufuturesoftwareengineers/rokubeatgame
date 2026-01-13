@@ -29,7 +29,7 @@
         <Group id="feedbackArea">
             <Label id="hitFeedback" font="font:MediumBoldSystemFont" horizAlign="center" vertAlign="center" />
             <Label id="comboLabel" text="0x COMBO" font="font:SmallSystemFont" color="0xdfe6e9FF" horizAlign="center" />
-        </Group>
+        </Group> 
         
         <!-- HUD - Left side -->
         <Group id="hudLeft">
