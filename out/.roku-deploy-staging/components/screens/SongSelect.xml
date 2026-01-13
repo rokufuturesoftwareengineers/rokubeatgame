@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!--
+    SongSelect.xml - Song selection screen (dynamically scaled)
+
+    REFACTORED: No hardcoded dimensions
+    - All positions set dynamically in BrightScript
+    - Uses percentage-based layout for device-agnostic design
+-->
+<component name="SongSelect" extends="Group">
+    <script type="text/brightscript" uri="pkg:/components/screens/SongSelect.brs" />
+
+    <interface>
+        <field id="songCatalog" type="assocarray" onChange="onCatalogLoaded" />
+        <field id="selectedSong" type="assocarray" alwaysNotify="true" />
+        <field id="action" type="string" alwaysNotify="true" />
+    </interface>
+
+    <children>
+        <!-- Background - sized dynamically -->
+        <Rectangle id="background" color="0x1a1a2eFF" />
+
+        <!-- Header bar -->
+        <Group id="headerGroup">
+            <Rectangle id="headerBg" color="0x2d3436FF" />
+            <Label id="headerTitle" text="SELECT A SONG" font="font:MediumBoldSystemFont" 
+                   color="0xFFFFFFFF" horizAlign="center" />
+        </Group>
+
+        <!-- Left panel - Song list -->
+        <Group id="listPanel">
+            <Rectangle id="listPanelBg" color="0x1a1a2e99" />
+            
+            <!-- Song list container (items created dynamically) -->
+            <Group id="songListContainer" />
+
+            <!-- Scroll indicators -->
+            <Label id="scrollUpIndicator" text="▲" font="font:SmallBoldSystemFont" 
+                   color="0x636e7288" horizAlign="center" visible="false" />
+            <Label id="scrollDownIndicator" text="▼" font="font:SmallBoldSystemFont" 
+                   color="0x636e7288" horizAlign="center" visible="false" />
+        </Group>
+
+        <!-- Right panel - Song details -->
+        <Group id="detailsPanel">
+            <Rectangle id="detailsPanelBg" color="0x2d343699" />
+
+            <!-- Song artwork placeholder -->
+            <Group id="artworkGroup">
+                <Rectangle id="artworkBg" color="0x6c5ce7FF" />
+                <Label id="artworkPlaceholder" text="♪" font="font:MediumBoldSystemFont" 
+                       color="0xFFFFFF88" horizAlign="center" vertAlign="center" />
+            </Group>
+
+            <!-- Song title -->
+            <Label id="detailTitle" text="Song Title" font="font:MediumBoldSystemFont" 
+                   color="0xFFFFFFFF" horizAlign="center" />
+
+            <!-- Artist -->
+            <Label id="detailArtist" text="Artist" font="font:SmallSystemFont" 
+                   color="0xb2bec3FF" horizAlign="center" />
+
+            <!-- Metadata rows -->
+            <Group id="difficultyRow">
+                <Label id="difficultyLabel" text="Difficulty:" font="font:SmallSystemFont" color="0x636e72FF" />
+                <Label id="difficultyValue" text="★★★☆☆" font="font:SmallSystemFont" color="0xfdcb6eFF" horizAlign="right" />
+            </Group>
+
+            <Group id="durationRow">
+                <Label id="durationLabel" text="Duration:" font="font:SmallSystemFont" color="0x636e72FF" />
+                <Label id="durationValue" text="0:00" font="font:SmallSystemFont" color="0xFFFFFFFF" horizAlign="right" />
+            </Group>
+
+            <Group id="bestScoreRow">
+                <Label id="bestScoreLabel" text="Best Score:" font="font:SmallSystemFont" color="0x636e72FF" />
+                <Label id="bestScoreValue" text="---" font="font:SmallSystemFont" color="0x00cec9FF" horizAlign="right" />
+            </Group>
+
+            <!-- Play button -->
+            <Group id="playButton">
+                <Rectangle id="playBtnBg" color="0x6c5ce7FF" />
+                <Label id="playBtnLabel" text="▶  PLAY" font="font:SmallBoldSystemFont" 
+                       color="0xFFFFFFFF" horizAlign="center" vertAlign="center" />
+            </Group>
+        </Group>
+
+        <!-- Footer instructions -->
+        <Label id="instructions" text="↑↓ Navigate   |   OK Play   |   ← Back" 
+               font="font:SmallSystemFont" color="0x636e72FF" horizAlign="center" />
+
+        <!-- No songs message -->
+        <Label id="noSongsLabel" text="No songs available
+
+Add songs to assets/songs/ folder"
+               font="font:SmallSystemFont" color="0x636e72FF" horizAlign="center" visible="false" />
+    </children>
+</component>

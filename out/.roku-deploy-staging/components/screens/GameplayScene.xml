@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- GameplayScene.xml - Core rhythm gameplay screen (dynamically scaled) -->
+<component name="GameplayScene" extends="Group">
+    <interface>
+        <field id="songData" type="assocarray" alwaysNotify="true" onChange="onSongLoaded" />
+        <field id="gameResult" type="assocarray" />
+        <field id="action" type="string" />
+    </interface>
+    
+    <script type="text/brightscript" uri="GameplayScene.brs" />
+    
+    <children>
+        <!-- Background - sized dynamically -->
+        <Rectangle id="background" color="0x1a1a2eFF" />
+        
+        <!-- Lane backdrop area - positioned dynamically -->
+        <Rectangle id="laneBackdrop" color="0x16213eFF" />
+        
+        <!-- Lane dividers - positioned dynamically in BRS -->
+        <Group id="laneDividers" />
+        
+        <!-- Lane receptors - positioned dynamically in BRS -->
+        <Group id="receptors" />
+        
+        <!-- Notes container -->
+        <Group id="notesContainer" />
+        
+        <!-- Hit feedback area - positioned dynamically -->
+        <Group id="feedbackArea">
+            <Label id="hitFeedback" font="font:MediumBoldSystemFont" horizAlign="center" vertAlign="center" />
+            <Label id="comboLabel" text="0x COMBO" font="font:SmallSystemFont" color="0xdfe6e9FF" horizAlign="center" />
+        </Group>
+        
+        <!-- HUD - Left side -->
+        <Group id="hudLeft">
+            <Label id="songTitle" text="Song Title" font="font:MediumBoldSystemFont" color="0xFFFFFFFF" />
+            <Label id="songArtist" text="Artist" font="font:SmallSystemFont" color="0x74b9ffFF" />
+            <Label id="scoreHeader" text="SCORE" font="font:SmallBoldSystemFont" color="0x636e72FF" />
+            <Label id="scoreLabel" text="0" font="font:LargeBoldSystemFont" color="0xffeaa7FF" />
+        </Group>
+        
+        <!-- HUD - Right side -->
+        <Group id="hudRight">
+            <Label id="accuracyHeader" text="ACCURACY" font="font:SmallBoldSystemFont" color="0x636e72FF" horizAlign="right" />
+            <Label id="accuracyLabel" text="100.00%" font="font:LargeBoldSystemFont" color="0x00cec9FF" horizAlign="right" />
+            <Group id="statsGroup">
+                <Label id="perfectHeader" text="PERFECT" font="font:SmallSystemFont" color="0x6c5ce7FF" />
+                <Label id="perfectCount" text="0" font="font:SmallBoldSystemFont" color="0x6c5ce7FF" />
+                <Label id="goodHeader" text="GOOD" font="font:SmallSystemFont" color="0x00b894FF" />
+                <Label id="goodCount" text="0" font="font:SmallBoldSystemFont" color="0x00b894FF" />
+                <Label id="missHeader" text="MISS" font="font:SmallSystemFont" color="0xd63031FF" />
+                <Label id="missCount" text="0" font="font:SmallBoldSystemFont" color="0xd63031FF" />
+            </Group>
+        </Group>
+        
+        <!-- Progress bar -->
+        <Group id="progressGroup">
+            <Rectangle id="progressBg" color="0x2d3436FF" />
+            <Rectangle id="progressBar" color="0xe94560FF" />
+        </Group>
+        
+        <!-- Pause overlay -->
+        <Group id="pauseOverlay" visible="false">
+            <Rectangle id="pauseBg" color="0x000000AA" />
+            <Label id="pauseTitle" text="PAUSED" font="font:LargeBoldSystemFont" color="0xFFFFFFFF" horizAlign="center" />
+            <Label id="pauseResume" text="Press OK to Resume" font="font:MediumSystemFont" color="0xb2bec3FF" horizAlign="center" />
+            <Label id="pauseQuit" text="Press BACK to Quit" font="font:SmallSystemFont" color="0x636e72FF" horizAlign="center" />
+        </Group>
+        
+        <!-- Countdown overlay -->
+        <Group id="countdownOverlay" visible="false">
+            <Rectangle id="countdownBg" color="0x00000088" />
+            <Label id="countdownText" text="3" font="font:LargeBoldSystemFont" color="0xFFFFFFFF" horizAlign="center" vertAlign="center" />
+        </Group>
+    </children>
+</component>

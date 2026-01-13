@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- HitBreakdownRow.xml - Hit type breakdown row component -->
+<component name="HitBreakdownRow" extends="Group">
+    <interface>
+        <field id="label" type="string" onChange="onLabelChanged" />
+        <field id="value" type="string" onChange="onValueChanged" />
+        <field id="bgColor" type="string" value="0x6c5ce7AA" onChange="onBgColorChanged" />
+    </interface>
+
+    <script type="text/brightscript" uri="pkg:/components/ui/HitBreakdownRow.brs" />
+
+    <children>
+        <Group id="rowContainer">
+            <Rectangle
+                id="rowBg"
+                width="490"
+                height="50"
+                color="0x6c5ce7AA" />
+            <LayoutGroup
+                layoutDirection="horiz"
+                itemSpacings="[30]"
+                translation="[20, 10]">
+                <Label
+                    id="labelText"
+                    text="PERFECT"
+                    font="font:MediumBoldSystemFont"
+                    color="0xFFFFFFFF"
+                    width="200" />
+                <Label
+                    id="valueText"
+                    text="0"
+                    font="font:MediumBoldSystemFont"
+                    color="0xFFFFFFFF"
+                    width="220"
+                    horizAlign="right" />
+            </LayoutGroup>
+        </Group>
+    </children>
+</component>

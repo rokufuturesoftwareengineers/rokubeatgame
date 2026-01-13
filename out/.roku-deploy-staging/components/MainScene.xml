@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!--
+    MainScene.xml
+    Central scene controller for Roku Osu Mania
+    Manages state transitions: START_MENU → SONG_SELECT → PLAYING → RESULTS
+
+    REFACTORED: Device-safe layout - no hardcoded dimensions
+-->
+<component name="MainScene" extends="Scene">
+    <script type="text/brightscript" uri="pkg:/components/MainScene.brs" />
+    
+    <interface>
+        <field id="gameState" type="string" value="START_MENU" />
+        <field id="selectedSong" type="assocarray" />
+        <field id="gameResults" type="assocarray" />
+    </interface>
+    
+    <children>
+        <!-- Background - sized dynamically in init() -->
+        <Rectangle
+            id="background"
+            color="0x16213eFF"
+        />
+
+        <!-- Screen container - screens are created dynamically -->
+        <Group id="screenContainer" />
+    </children>
+</component>

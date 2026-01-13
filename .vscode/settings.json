@@ -1,0 +1,29 @@
+{
+    "brightscript.format.indentStyle": "spaces",
+    "brightscript.format.indentSpaceCount": 4,
+    "editor.tabSize": 4,
+    "editor.insertSpaces": true,
+    "files.associations": {
+        "*.brs": "brightscript",
+        "*.bs": "brighterscript",
+        "manifest": "properties"
+    },
+    "files.exclude": {
+        "**/.DS_Store": true,
+        "**/out": false,
+        "**/__pycache__": true,
+        "**/*.pyc": true
+    },
+    "search.exclude": {
+        "**/out": true,
+        "**/node_modules": true
+    },
+    "brightscript.bsdk": "embedded",
+    "[brightscript]": {
+        "editor.defaultFormatter": "RokuCommunity.brightscript"
+    },
+    "python.defaultInterpreterPath": "/usr/local/bin/python3",
+    "python.analysis.extraPaths": [
+        "${workspaceFolder}/tools"
+    ]
+}

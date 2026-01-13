@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Receptor.xml - Lane receptor/target component -->
+<component name="Receptor" extends="Group">
+    <interface>
+        <field id="arrow" type="string" value="^" onChange="onArrowChanged" />
+        <field id="arrowColor" type="string" value="0xe94560FF" onChange="onArrowColorChanged" />
+        <field id="pressed" type="boolean" value="false" onChange="onPressedChanged" />
+    </interface>
+
+    <script type="text/brightscript" uri="pkg:/components/ui/Receptor.brs" />
+
+    <children>
+        <Group id="receptorContainer">
+            <Rectangle
+                id="receptorBg"
+                width="140"
+                height="80"
+                color="0x0f346080" />
+            <Label
+                id="receptorArrow"
+                text="^"
+                font="font:LargeBoldSystemFont"
+                color="0xe94560FF"
+                width="140"
+                height="80"
+                horizAlign="center"
+                vertAlign="center" />
+        </Group>
+    </children>
+</component>

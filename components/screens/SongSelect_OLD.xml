@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!--
+    SongSelect_OLD.xml
+    Song selection screen - displays available songs from catalog
+    DEPRECATED: This is the old version. Use SongSelect.xml instead.
+-->
+<component name="SongSelect_OLD" extends="Group">
+    <script type="text/brightscript" uri="pkg:/components/screens/SongSelect.brs" />
+    
+    <interface>
+        <field id="songCatalog" type="assocarray" onChange="onCatalogLoaded" />
+        <field id="selectedSong" type="assocarray" alwaysNotify="true" />
+        <field id="action" type="string" alwaysNotify="true" />
+    </interface>
+    
+    <children>
+        <!-- Header bar -->
+        <Rectangle
+            id="headerBg"
+            translation="[0, 0]"
+            width="1280"
+            height="80"
+            color="0x2d3436FF"
+        />
+        
+        <Label
+            id="headerTitle"
+            translation="[640, 25]"
+            text="SELECT A SONG"
+            font="font:LargeBoldSystemFont"
+            color="0xFFFFFFFF"
+            horizAlign="center"
+            width="400"
+        />
+        
+        <!-- Song list panel (left side) -->
+        <Rectangle
+            id="listPanelBg"
+            translation="[40, 100]"
+            width="720"
+            height="520"
+            color="0x1a1a2e99"
+        />
+        
+        <Group id="songListContainer" translation="[60, 120]">
+            <!-- Song items created dynamically -->
+        </Group>
+        
+        <!-- Scroll indicators -->
+        <Label
+            id="scrollUpIndicator"
+            translation="[400, 95]"
+            text="▲"
+            font="font:SmallBoldSystemFont"
+            color="0x636e7288"
+            visible="false"
+        />
+        <Label
+            id="scrollDownIndicator"
+            translation="[400, 625]"
+            text="▼"
+            font="font:SmallBoldSystemFont"
+            color="0x636e7288"
+            visible="false"
+        />
+        
+        <!-- Song details panel (right side) -->
+        <Rectangle
+            id="detailsPanelBg"
+            translation="[800, 100]"
+            width="440"
+            height="520"
+            color="0x2d343699"
+        />
+        
+        <!-- Song artwork placeholder -->
+        <Rectangle
+            id="artworkBg"
+            translation="[860, 130]"
+            width="320"
+            height="180"
+            color="0x6c5ce7FF"
+        />
+        <Label
+            id="artworkPlaceholder"
+            translation="[1020, 200]"
+            text="♪"
+            font="font:LargeBoldSystemFont"
+            color="0xFFFFFF88"
+            horizAlign="center"
+            width="100"
+        />
+        
+        <!-- Song title -->
+        <Label
+            id="detailTitle"
+            translation="[1020, 330]"
+            text="Song Title"
+            font="font:MediumBoldSystemFont"
+            color="0xFFFFFFFF"
+            horizAlign="center"
+            width="400"
+        />
+        
+        <!-- Artist -->
+        <Label
+            id="detailArtist"
+            translation="[1020, 365]"
+            text="Artist"
+            font="font:SmallSystemFont"
+            color="0xb2bec3FF"
+            horizAlign="center"
+            width="400"
+        />
+        
+        <!-- Difficulty -->
+        <Label
+            id="difficultyLabel"
+            translation="[830, 420]"
+            text="Difficulty:"
+            font="font:SmallSystemFont"
+            color="0x636e72FF"
+            width="120"
+        />
+        <Label
+            id="difficultyValue"
+            translation="[950, 420]"
+            text="★★★☆☆"
+            font="font:SmallSystemFont"
+            color="0xfdcb6eFF"
+            width="250"
+        />
+        
+        <!-- Duration -->
+        <Label
+            id="durationLabel"
+            translation="[830, 455]"
+            text="Duration:"
+            font="font:SmallSystemFont"
+            color="0x636e72FF"
+            width="120"
+        />
+        <Label
+            id="durationValue"
+            translation="[950, 455]"
+            text="0:00"
+            font="font:SmallSystemFont"
+            color="0xFFFFFFFF"
+            width="200"
+        />
+        
+        <!-- Best score -->
+        <Label
+            id="bestScoreLabel"
+            translation="[830, 490]"
+            text="Best Score:"
+            font="font:SmallSystemFont"
+            color="0x636e72FF"
+            width="120"
+        />
+        <Label
+            id="bestScoreValue"
+            translation="[950, 490]"
+            text="---"
+            font="font:SmallSystemFont"
+            color="0x00cec9FF"
+            width="200"
+        />
+        
+        <!-- Play button -->
+        <Rectangle
+            id="playButtonBg"
+            translation="[900, 540]"
+            width="240"
+            height="55"
+            color="0x6c5ce7FF"
+        />
+        <Label
+            id="playButtonLabel"
+            translation="[1020, 552]"
+            text="▶  PLAY"
+            font="font:MediumBoldSystemFont"
+            color="0xFFFFFFFF"
+            horizAlign="center"
+            width="240"
+        />
+        
+        <!-- Footer instructions -->
+        <Label
+            id="instructions"
+            translation="[640, 660]"
+            text="↑↓ Navigate   |   OK Play   |   ← Back"
+            font="font:SmallSystemFont"
+            color="0x636e72FF"
+            horizAlign="center"
+            width="500"
+        />
+        
+        <!-- No songs message -->
+        <Label
+            id="noSongsLabel"
+            translation="[400, 350]"
+            text="No songs available\n\nAdd songs to assets/songs/ folder"
+            font="font:MediumSystemFont"
+            color="0x636e72FF"
+            horizAlign="center"
+            width="500"
+            visible="false"
+        />
+    </children>
+</component>

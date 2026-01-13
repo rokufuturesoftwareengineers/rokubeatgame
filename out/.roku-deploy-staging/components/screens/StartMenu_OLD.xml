@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!--
+    StartMenu_OLD.xml
+    Main menu with title and play button
+    DEPRECATED: This is the old version. Use StartMenu.xml instead.
+-->
+<component name="StartMenu_OLD" extends="Group">
+    <script type="text/brightscript" uri="pkg:/components/screens/StartMenu.brs" />
+    
+    <interface>
+        <field id="menuAction" type="string" alwaysNotify="true" />
+    </interface>
+    
+    <children>
+        <!-- Title glow effect -->
+        <Rectangle
+            id="titleGlow"
+            translation="[340, 80]"
+            width="600"
+            height="140"
+            color="0x0f3460AA"
+        />
+        
+        <!-- Game Title -->
+        <Label
+            id="titleMain"
+            translation="[640, 100]"
+            text="OSU MANIA"
+            font="font:LargeBoldSystemFont"
+            color="0xe94560FF"
+            horizAlign="center"
+            width="500"
+        />
+        
+        <!-- Subtitle -->
+        <Label
+            id="titleSub"
+            translation="[640, 170]"
+            text="for Roku"
+            font="font:MediumSystemFont"
+            color="0x0f3460FF"
+            horizAlign="center"
+            width="400"
+        />
+        
+        <!-- Decorative lines -->
+        <Rectangle translation="[440, 230]" width="400" height="3" color="0xe94560FF" />
+        
+        <!-- Menu buttons -->
+        <LayoutGroup
+            id="menuButtons"
+            translation="[640, 320]"
+            layoutDirection="vert"
+            horizAlignment="center"
+            itemSpacings="[20]"
+        >
+            <!-- Play Button -->
+            <Group id="playBtn">
+                <Rectangle id="playBtnBg" width="320" height="70" color="0xe94560FF" translation="[-160, 0]" />
+                <Label id="playBtnText" text="▶  PLAY" font="font:LargeBoldSystemFont" color="0xFFFFFFFF" 
+                       horizAlign="center" vertAlign="center" width="320" height="70" translation="[-160, 0]" />
+            </Group>
+            
+            <!-- How to Play Button -->
+            <Group id="helpBtn">
+                <Rectangle id="helpBtnBg" width="320" height="70" color="0x1a1a2eFF" translation="[-160, 0]" />
+                <Label id="helpBtnText" text="?  HOW TO PLAY" font="font:MediumBoldSystemFont" color="0x888888FF" 
+                       horizAlign="center" vertAlign="center" width="320" height="70" translation="[-160, 0]" />
+            </Group>
+        </LayoutGroup>
+        
+        <!-- Key hints -->
+        <Group id="keyHints" translation="[640, 520]">
+            <Rectangle width="500" height="100" color="0x0f346033" translation="[-250, 0]" />
+            <Label text="Controls:" font="font:SmallBoldSystemFont" color="0xFFFFFFFF" 
+                   horizAlign="center" width="500" translation="[-250, 15]" />
+            <Label text="← Lane 1  |  ↑ Lane 2  |  ↓ Lane 3  |  → Lane 4" 
+                   font="font:SmallSystemFont" color="0xAAAAAAFF" horizAlign="center" width="500" translation="[-250, 45]" />
+            <Label text="OK to hit notes in time with the music!" 
+                   font="font:SmallSystemFont" color="0x888888FF" horizAlign="center" width="500" translation="[-250, 70]" />
+        </Group>
+        
+        <!-- Footer -->
+        <Label
+            id="versionLabel"
+            translation="[640, 680]"
+            text="v1.0.0 - Press OK to select"
+            font="font:SmallSystemFont"
+            color="0x444444FF"
+            horizAlign="center"
+            width="400"
+        />
+        
+        <!-- Animated notes (decorative) -->
+        <Label id="noteL" translation="[150, 300]" text="♪" font="font:LargeBoldSystemFont" color="0xe9456044" />
+        <Label id="noteR" translation="[1100, 350]" text="♫" font="font:LargeBoldSystemFont" color="0xe9456044" />
+    </children>
+</component>

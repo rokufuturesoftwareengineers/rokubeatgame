@@ -1,0 +1,142 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Package Roku App",
+            "type": "shell",
+            "command": "zip",
+            "args": [
+                "-r",
+                "${workspaceFolder}/out/roku_osu_mania.zip",
+                "manifest",
+                "source",
+                "components",
+                "images",
+                "assets",
+                "-x",
+                "*.DS_Store",
+                "-x",
+                "*__pycache__*",
+                "-x",
+                "*.pyc"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "problemMatcher": [],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "presentation": {
+                "echo": true,
+                "reveal": "silent",
+                "focus": false,
+                "panel": "shared"
+            }
+        },
+        {
+            "label": "Create Output Directory",
+            "type": "shell",
+            "command": "mkdir",
+            "args": ["-p", "${workspaceFolder}/out"],
+            "problemMatcher": []
+        },
+        {
+            "label": "Clean Build",
+            "type": "shell",
+            "command": "rm",
+            "args": ["-rf", "${workspaceFolder}/out/*.zip"],
+            "problemMatcher": []
+        },
+        {
+            "label": "Generate Beatmap",
+            "type": "shell",
+            "command": "python3",
+            "args": [
+                "${workspaceFolder}/tools/beatmap_generator.py",
+                "${input:audioFile}",
+                "-t", "${input:songTitle}",
+                "-a", "${input:artistName}",
+                "-d", "${input:difficulty}",
+                "-o", "${workspaceFolder}/assets/songs/${input:outputName}.json"
+            ],
+            "problemMatcher": [],
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": true,
+                "panel": "new"
+            }
+        },
+        {
+            "label": "Install Python Dependencies",
+            "type": "shell",
+            "command": "pip3",
+            "args": ["install", "-r", "${workspaceFolder}/tools/requirements.txt"],
+            "problemMatcher": []
+        },
+        {
+            "label": "Sideload to Roku (curl)",
+            "type": "shell",
+            "command": "curl",
+            "args": [
+                "--user", "rokudev:${input:rokuPassword}",
+                "--digest",
+                "-F", "mysubmit=Install",
+                "-F", "archive=@${workspaceFolder}/out/roku_osu_mania.zip",
+                "http://${input:rokuIP}/plugin_install"
+            ],
+            "dependsOn": ["Create Output Directory", "Package Roku App"],
+            "problemMatcher": [],
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": true,
+                "panel": "new"
+            }
+        }
+    ],
+    "inputs": [
+        {
+            "id": "audioFile",
+            "type": "promptString",
+            "description": "Path to audio file (mp3/wav)"
+        },
+        {
+            "id": "songTitle",
+            "type": "promptString",
+            "description": "Song title"
+        },
+        {
+            "id": "artistName",
+            "type": "promptString",
+            "description": "Artist name",
+            "default": "Unknown Artist"
+        },
+        {
+            "id": "difficulty",
+            "type": "pickString",
+            "description": "Difficulty level",
+            "options": ["easy", "normal", "hard", "expert"],
+            "default": "normal"
+        },
+        {
+            "id": "outputName",
+            "type": "promptString",
+            "description": "Output filename (without .json)"
+        },
+        {
+            "id": "rokuIP",
+            "type": "promptString",
+            "description": "Roku device IP address",
+            "default": "192.168.1.100"
+        },
+        {
+            "id": "rokuPassword",
+            "type": "promptString",
+            "description": "Roku developer password",
+            "password": true
+        }
+    ]
+}

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- LaneSystem.xml - Complete lane system with backdrop -->
+<component name="LaneSystem" extends="Group">
+    <interface>
+        <field id="numLanes" type="integer" value="4" />
+        <field id="laneWidth" type="integer" value="200" />
+    </interface>
+
+    <script type="text/brightscript">
+    <![CDATA[
+        sub init()
+            m.backdrop = m.top.findNode("laneBackdrop")
+            m.lanesContainer = m.top.findNode("lanesContainer")
+            m.lane0 = m.top.findNode("lane0")
+            m.lane1 = m.top.findNode("lane1")
+            m.lane2 = m.top.findNode("lane2")
+            m.lane3 = m.top.findNode("lane3")
+            m.finalDivider = m.top.findNode("finalDivider")
+
+            ' Calculate total width
+            totalWidth = m.top.numLanes * m.top.laneWidth
+            m.backdrop.width = totalWidth
+        end sub
+    ]]>
+    </script>
+
+    <children>
+        <!-- Lane Backdrop (full height) -->
+        <Rectangle
+            id="laneBackdrop"
+            width="800"
+            height="1080"
+            color="0x16213eFF" />
+
+        <!-- Lanes Container -->
+        <Group id="lanesContainer">
+            <Lane id="lane0" laneIndex="0" laneWidth="200" translation="[0, 0]" />
+            <Lane id="lane1" laneIndex="1" laneWidth="200" translation="[200, 0]" />
+            <Lane id="lane2" laneIndex="2" laneWidth="200" translation="[400, 0]" />
+            <Lane id="lane3" laneIndex="3" laneWidth="200" translation="[600, 0]" />
+
+            <!-- Final divider (full height) -->
+            <Rectangle
+                id="finalDivider"
+                translation="[800, 0]"
+                width="2"
+                height="1080"
+                color="0x0f3460FF" />
+        </Group>
+    </children>
+</component>

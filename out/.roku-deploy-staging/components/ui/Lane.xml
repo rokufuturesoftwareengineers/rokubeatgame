@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Lane.xml - Individual lane container for notes -->
+<component name="Lane" extends="Group">
+    <interface>
+        <field id="laneIndex" type="integer" value="0" />
+        <field id="laneWidth" type="integer" value="200" />
+    </interface>
+
+    <script type="text/brightscript">
+    <![CDATA[
+        sub init()
+            m.divider = m.top.findNode("laneDivider")
+            m.notesContainer = m.top.findNode("notesContainer")
+        end sub
+    ]]>
+    </script>
+
+    <children>
+        <Group id="laneContainer">
+            <!-- Lane divider (full height) -->
+            <Rectangle
+                id="laneDivider"
+                width="2"
+                height="1080"
+                color="0x0f3460FF" />
+
+            <!-- Notes container (notes spawn here with Y translation only) -->
+            <Group id="notesContainer" translation="[100, 0]" />
+        </Group>
+    </children>
+</component>

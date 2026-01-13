@@ -1,0 +1,73 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Roku: Deploy and Debug",
+            "type": "brightscript",
+            "request": "launch",
+            "rootDir": "${workspaceFolder}",
+            "host": "192.168.7.236",
+            "password": "roku6",
+            "stopOnEntry": false,
+            "enableDebuggerAutoRecovery": true,
+            "retainStagingFolder": true,
+            "enableSourceMaps": true,
+            "consoleOutput": "full",
+            "files": [
+                "manifest",
+                "source/**/*",
+                "components/**/*",
+                "images/**/*",
+                "assets/**/*"
+            ],
+            "preLaunchTask": "Package Roku App"
+        },
+        {
+            "name": "Roku: Deploy Only",
+            "type": "brightscript",
+            "request": "launch",
+            "rootDir": "${workspaceFolder}",
+            "host": "192.168.7.236",
+            "password": "roku6",
+            "stopOnEntry": false,
+            "files": [
+                "manifest",
+                "source/**/*",
+                "components/**/*",
+                "images/**/*",
+                "assets/**/*"
+            ]
+        },
+        {
+            "name": "Roku: Sideload to Device",
+            "type": "brightscript",
+            "request": "launch",
+            "rootDir": "${workspaceFolder}",
+            "host": "192.168.7.236",
+            "password": "roku6",
+            "stopOnEntry": false,
+            "injectRaleTrackerTask": false,
+            "files": [
+                "manifest",
+                "source/**/*",
+                "components/**/*",
+                "images/**/*",
+                "assets/**/*"
+            ]
+        }
+    ],
+    "inputs": [
+        {
+            "id": "rokuIP",
+            "type": "promptString",
+            "description": "Enter your Roku device IP address (e.g., 192.168.1.100)",
+            "default": "192.168.1.100"
+        },
+        {
+            "id": "rokuPassword",
+            "type": "promptString",
+            "description": "Enter your Roku developer password",
+            "password": true
+        }
+    ]
+}

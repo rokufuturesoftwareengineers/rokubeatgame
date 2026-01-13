@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- HitStatRow.xml - Hit statistic row for gameplay HUD -->
+<component name="HitStatRow" extends="Group">
+    <interface>
+        <field id="label" type="string" onChange="onLabelChanged" />
+        <field id="value" type="string" onChange="onValueChanged" />
+        <field id="statColor" type="string" value="0x6c5ce7FF" onChange="onStatColorChanged" />
+    </interface>
+
+    <script type="text/brightscript" uri="pkg:/components/ui/HitStatRow.brs" />
+
+    <children>
+        <LayoutGroup
+            layoutDirection="horiz"
+            itemSpacings="[20]">
+            <Label
+                id="labelText"
+                text="PERFECT"
+                font="font:SmallSystemFont"
+                color="0x6c5ce7FF"
+                width="80" />
+            <Label
+                id="valueText"
+                text="0"
+                font="font:SmallBoldSystemFont"
+                color="0x6c5ce7FF"
+                width="60" />
+        </LayoutGroup>
+    </children>
+</component>

@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- 
+    GameplayScene_OLD.xml - Core rhythm gameplay screen 
+    DEPRECATED: This is the old version. Use GameplayScene.xml instead.
+-->
+<component name="GameplayScene_OLD" extends="Group">
+    <interface>
+        <field id="songData" type="assocarray" alwaysNotify="true" onChange="onSongLoaded" />
+        <field id="gameResult" type="assocarray" />
+        <field id="action" type="string" />
+    </interface>
+    
+    <script type="text/brightscript" uri="pkg:/components/screens/GameplayScene.brs" />
+    
+    <children>
+        <!-- Background -->
+        <Rectangle
+            id="background"
+            width="1920"
+            height="1080"
+            color="0x1a1a2eFF" />
+        
+        <!-- Lane backdrop area -->
+        <Rectangle
+            id="laneBackdrop"
+            translation="[360, 0]"
+            width="800"
+            height="1080"
+            color="0x16213eFF" />
+        
+        <!-- Lane dividers -->
+        <Group id="laneDividers">
+            <Rectangle translation="[360, 0]" width="2" height="1080" color="0x0f3460FF" />
+            <Rectangle translation="[560, 0]" width="2" height="1080" color="0x0f3460FF" />
+            <Rectangle translation="[760, 0]" width="2" height="1080" color="0x0f3460FF" />
+            <Rectangle translation="[960, 0]" width="2" height="1080" color="0x0f3460FF" />
+            <Rectangle translation="[1160, 0]" width="2" height="1080" color="0x0f3460FF" />
+        </Group>
+        
+        <!-- Hit zone / receptor line -->
+        <Rectangle
+            id="hitZone"
+            translation="[360, 720]"
+            width="800"
+            height="4"
+            color="0xe94560FF" />
+        
+        <!-- Lane receptors - Arrow targets at bottom -->
+        <Group id="receptors" translation="[0, 650]">
+            <!-- Lane 0 - Left Arrow -->
+            <Group translation="[410, 0]">
+                <Rectangle id="receptor0Bg" width="140" height="80" color="0x0f346080" />
+                <Label id="receptor0Arrow" text="&#60;" font="font:LargeBoldSystemFont" color="0xe94560FF" 
+                       width="140" height="80" horizAlign="center" vertAlign="center" />
+            </Group>
+            <!-- Lane 1 - Up Arrow -->
+            <Group translation="[610, 0]">
+                <Rectangle id="receptor1Bg" width="140" height="80" color="0x0f346080" />
+                <Label id="receptor1Arrow" text="^" font="font:LargeBoldSystemFont" color="0x00cec9FF" 
+                       width="140" height="80" horizAlign="center" vertAlign="center" />
+            </Group>
+            <!-- Lane 2 - Down Arrow -->
+            <Group translation="[810, 0]">
+                <Rectangle id="receptor2Bg" width="140" height="80" color="0x0f346080" />
+                <Label id="receptor2Arrow" text="v" font="font:LargeBoldSystemFont" color="0xfdcb6eFF" 
+                       width="140" height="80" horizAlign="center" vertAlign="center" />
+            </Group>
+            <!-- Lane 3 - Right Arrow -->
+            <Group translation="[1010, 0]">
+                <Rectangle id="receptor3Bg" width="140" height="80" color="0x0f346080" />
+                <Label id="receptor3Arrow" text="&#62;" font="font:LargeBoldSystemFont" color="0x6c5ce7FF" 
+                       width="140" height="80" horizAlign="center" vertAlign="center" />
+            </Group>
+        </Group>
+        
+        <!-- Notes container (notes spawn here) -->
+        <Group id="notesContainer" />
+        
+        <!-- Hit feedback area -->
+        <Group id="feedbackArea" translation="[760, 550]">
+            <Label id="hitFeedback" 
+                   font="font:LargeBoldSystemFont"
+                   horizAlign="center"
+                   vertAlign="center"
+                   width="400"
+                   translation="[-200, 0]" />
+            <Label id="comboLabel"
+                   text="0x COMBO"
+                   font="font:MediumSystemFont"
+                   color="0xdfe6e9FF"
+                   horizAlign="center"
+                   width="400"
+                   translation="[-200, 60]" />
+        </Group>
+        
+        <!-- HUD - Left side -->
+        <Group id="hudLeft" translation="[50, 50]">
+            <!-- Song info -->
+            <Label id="songTitle"
+                   text="Song Title"
+                   font="font:MediumBoldSystemFont"
+                   color="0xFFFFFFFF"
+                   width="450" />
+            <Label id="songArtist"
+                   text="Artist"
+                   font="font:SmallSystemFont"
+                   color="0x74b9ffFF"
+                   translation="[0, 40]"
+                   width="450" />
+            
+            <!-- Score -->
+            <Label text="SCORE"
+                   font="font:SmallBoldSystemFont"
+                   color="0x636e72FF"
+                   translation="[0, 120]" />
+            <Label id="scoreLabel"
+                   text="0"
+                   font="font:LargeBoldSystemFont"
+                   color="0xffeaa7FF"
+                   translation="[0, 145]"
+                   width="300" />
+        </Group>
+        
+        <!-- HUD - Right side -->
+        <Group id="hudRight" translation="[1400, 50]">
+            <!-- Accuracy -->
+            <Label text="ACCURACY"
+                   font="font:SmallBoldSystemFont"
+                   color="0x636e72FF"
+                   horizAlign="right"
+                   width="450" />
+            <Label id="accuracyLabel"
+                   text="100.00%"
+                   font="font:LargeBoldSystemFont"
+                   color="0x00cec9FF"
+                   translation="[0, 25]"
+                   horizAlign="right"
+                   width="450" />
+            
+            <!-- Stats -->
+            <Group translation="[350, 100]">
+                <Label text="PERFECT" font="font:SmallSystemFont" color="0x6c5ce7FF" />
+                <Label id="perfectCount" text="0" font="font:SmallBoldSystemFont" 
+                       color="0x6c5ce7FF" translation="[80, 0]" />
+                
+                <Label text="GOOD" font="font:SmallSystemFont" color="0x00b894FF" 
+                       translation="[0, 25]" />
+                <Label id="goodCount" text="0" font="font:SmallBoldSystemFont" 
+                       color="0x00b894FF" translation="[80, 25]" />
+                
+                <Label text="MISS" font="font:SmallSystemFont" color="0xd63031FF" 
+                       translation="[0, 50]" />
+                <Label id="missCount" text="0" font="font:SmallBoldSystemFont" 
+                       color="0xd63031FF" translation="[80, 50]" />
+            </Group>
+        </Group>
+        
+        <!-- Progress bar -->
+        <Group id="progressGroup" translation="[360, 760]">
+            <Rectangle id="progressBg" width="800" height="10" color="0x2d3436FF" />
+            <Rectangle id="progressBar" width="0" height="10" color="0xe94560FF" />
+        </Group>
+        
+        <!-- Pause overlay -->
+        <Group id="pauseOverlay" visible="false">
+            <Rectangle width="1920" height="1080" color="0x000000AA" />
+            <Label text="PAUSED"
+                   font="font:LargeBoldSystemFont"
+                   color="0xFFFFFFFF"
+                   translation="[760, 450]"
+                   horizAlign="center"
+                   width="400" />
+            <Label text="Press OK to Resume"
+                   font="font:MediumSystemFont"
+                   color="0xb2bec3FF"
+                   translation="[760, 520]"
+                   horizAlign="center"
+                   width="400" />
+            <Label text="Press BACK to Quit"
+                   font="font:SmallSystemFont"
+                   color="0x636e72FF"
+                   translation="[760, 570]"
+                   horizAlign="center"
+                   width="400" />
+        </Group>
+        
+        <!-- Countdown overlay -->
+        <Group id="countdownOverlay" visible="false">
+            <Rectangle width="1920" height="1080" color="0x00000088" />
+            <Label id="countdownText"
+                   text="3"
+                   font="font:LargeBoldSystemFont"
+                   color="0xFFFFFFFF"
+                   translation="[860, 450]"
+                   horizAlign="center"
+                   width="200"
+                   height="200"
+                   vertAlign="center" />
+        </Group>
+    </children>
+</component>

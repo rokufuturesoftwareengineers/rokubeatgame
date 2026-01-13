@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- SongListItem.xml - Song list entry component (dynamically sized) -->
+<component name="SongListItem" extends="Group">
+    <interface>
+        <field id="songTitle" type="string" onChange="onSongTitleChanged" />
+        <field id="songArtist" type="string" onChange="onSongArtistChanged" />
+        <field id="selected" type="boolean" value="false" onChange="onSelectedChanged" />
+        <field id="itemWidth" type="integer" value="680" onChange="updateDimensions" />
+        <field id="itemHeight" type="integer" value="70" onChange="updateDimensions" />
+    </interface>
+
+    <script type="text/brightscript" uri="pkg:/components/ui/SongListItem.brs" />
+
+    <children>
+        <Group id="itemContainer">
+            <!-- Background -->
+            <Rectangle id="itemBg" color="0x1a1a2e00" />
+
+            <!-- Selection indicator bar -->
+            <Rectangle id="selectionBar" color="0xe94560FF" visible="false" />
+
+            <!-- Song info -->
+            <Group id="infoGroup">
+                <Label id="titleLabel" text="Song Title" font="font:MediumBoldSystemFont" color="0xFFFFFFFF" />
+                <Label id="artistLabel" text="Artist" font="font:SmallSystemFont" color="0x74b9ffFF" />
+            </Group>
+        </Group>
+    </children>
+</component>

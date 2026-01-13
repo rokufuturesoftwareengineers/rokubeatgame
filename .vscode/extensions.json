@@ -1,0 +1,8 @@
+{
+    "recommendations": [
+        "RokuCommunity.brightscript",
+        "RokuCommunity.brighterscript",
+        "ms-python.python",
+        "ms-python.vscode-pylance"
+    ]
+}
