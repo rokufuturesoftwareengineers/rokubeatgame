@@ -14,11 +14,11 @@
                 "images",
                 "assets",
                 "-x",
-                "*.DS_Store",
+                "'*.DS_Store'",
                 "-x",
-                "*__pycache__*",
+                "'*__pycache__*'",
                 "-x",
-                "*.pyc"
+                "'*.pyc'"
             ],
             "options": {
                 "cwd": "${workspaceFolder}"
