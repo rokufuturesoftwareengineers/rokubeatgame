@@ -1,5 +1,4 @@
-' HitStatRow.brs
-' Hit statistic row for gameplay HUD logic
+' Single stat row for the gameplay HUD
 
 sub init()
     m.labelNode = m.top.findNode("labelText")

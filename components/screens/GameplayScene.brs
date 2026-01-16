@@ -1,20 +1,13 @@
-' GameplayScene.brs
-' Core rhythm gameplay - note spawning, hit detection, scoring
-' All positions calculated dynamically based on screen size
+' The main gameplay loop - handles notes, timing, and scoring
+' Layout math is resolution-independent so this works on any Roku
 
 sub init()
     print "[Gameplay] Initializing..."
     
-    ' Get screen dimensions dynamically
     initScreenDimensions()
-    
-    ' Calculate layout based on screen size
     calculateLayout()
-    
-    ' Setup all UI elements with dynamic positions
     setupLayout()
     
-    ' Get UI references
     m.notesContainer = m.top.findNode("notesContainer")
     m.songTitle = m.top.findNode("songTitle")
     m.songArtist = m.top.findNode("songArtist")
@@ -30,19 +23,18 @@ sub init()
     m.countdownOverlay = m.top.findNode("countdownOverlay")
     m.countdownText = m.top.findNode("countdownText")
     
-    ' Original arrow colors
+    ' Lane colors match the arrow indicators
     m.arrowColors = ["0xe94560FF", "0x00cec9FF", "0xfdcb6eFF", "0x6c5ce7FF"]
     
-    ' Timing windows (seconds) - not screen dependent
+    ' Hit detection windows - tweak these to adjust game feel
     m.perfectWindow = 0.05     ' ±50ms
     m.goodWindow = 0.10        ' ±100ms
     
-    ' Scoring
+    ' Points per hit type
     m.perfectPoints = 300
     m.goodPoints = 100
     m.missPoints = 0
     
-    ' Game state
     m.isPaused = false
     m.isPlaying = false
     m.isCountingDown = false
@@ -55,37 +47,36 @@ sub init()
     m.misses = 0
     m.totalNotes = 0
     
-    ' Notes data
     m.beatmap = []
     m.activeNotes = []
     m.nextNoteIndex = 0
     m.songLength = 0
     m.audioPath = ""
     
-    ' Audio node for music playback (SceneGraph compatible)
+    ' SceneGraph Audio node for music
     m.audioNode = CreateObject("roSGNode", "Audio")
     m.audioNode.observeField("state", "onAudioStateChange")
     
-    ' Game timer
+    ' Main game loop at ~60fps
     m.gameTimer = CreateObject("roSGNode", "Timer")
     m.gameTimer.repeat = true
-    m.gameTimer.duration = 0.016  ' ~60fps
+    m.gameTimer.duration = 0.016
     m.gameTimer.observeField("fire", "onGameTick")
     
-    ' Countdown timer
+    ' Pre-game countdown
     m.countdownTimer = CreateObject("roSGNode", "Timer")
     m.countdownTimer.repeat = true
     m.countdownTimer.duration = 1.0
     m.countdownTimer.observeField("fire", "onCountdownTick")
     m.countdownValue = 3
     
-    ' Feedback clear timer
+    ' Clears "PERFECT/GOOD/MISS" text after a moment
     m.feedbackTimer = CreateObject("roSGNode", "Timer")
     m.feedbackTimer.repeat = false
     m.feedbackTimer.duration = 0.3
     m.feedbackTimer.observeField("fire", "clearFeedback")
     
-    ' Receptor flash timers (one per lane)
+    ' Each lane gets its own timer to flash on keypress
     m.receptorTimers = []
     for i = 0 to 3
         timer = CreateObject("roSGNode", "Timer")
@@ -101,7 +92,6 @@ sub init()
     print "[Gameplay] Initialization complete - Screen: "; m.screenWidth; "x"; m.screenHeight
 end sub
 
-' Initialize screen dimensions
 sub initScreenDimensions()
     m.screenWidth = 1280
     m.screenHeight = 720
@@ -113,52 +103,45 @@ sub initScreenDimensions()
         m.screenHeight = displaySize.h
     end if
     
-    ' Calculate scale factor (base resolution is 720p)
+    ' Everything scales off 720p as the baseline
     m.scaleFactor = m.screenHeight / 720.0
 end sub
 
-' Calculate all layout values based on screen size
 sub calculateLayout()
-    ' Lane area takes up middle ~42% of screen width
+    ' Lanes sit in the center ~42% of the screen
     m.laneAreaWidth = int(m.screenWidth * 0.42)
     m.laneAreaX = int((m.screenWidth - m.laneAreaWidth) / 2)
     
-    ' Each lane width
     m.laneWidth = int(m.laneAreaWidth / 4)
     m.lanePositions = []
     for i = 0 to 3
         m.lanePositions.push(m.laneAreaX + (i * m.laneWidth))
     end for
     
-    ' Note dimensions (scaled)
     m.noteWidth = int(m.laneWidth * 0.9)
     m.noteHeight = int(m.screenHeight * 0.038)
     
-    ' Hit line at 86% from top (shifted down from 75%)
+    ' Where notes should be hit (86% down feels right)
     m.hitLineY = int(m.screenHeight * 0.86)
     
-    ' Receptor position - bottom of receptor box aligned with hit line
+    ' Receptors sit just above the hit line
     m.receptorHeight = int(m.screenHeight * 0.074)
-    m.receptorY = int(m.hitLineY - m.receptorHeight)  ' Bottom edge at hit line
+    m.receptorY = int(m.hitLineY - m.receptorHeight)
     
-    ' Note speed scales with screen height
-    m.noteSpeed = int(m.screenHeight * 0.556)  ' 400 at 720p
+    ' How fast notes travel (tuned for 720p, scales up from there)
+    m.noteSpeed = int(m.screenHeight * 0.556)
     
-    ' Spawn position above screen
+    ' Notes spawn above the visible area
     m.spawnY = int(-m.screenHeight * 0.046)
     
-    ' Progress bar position (below hit zone)
     m.progressY = int(m.hitLineY + (m.screenHeight * 0.02))
     m.progressHeight = int(m.screenHeight * 0.01)
     
-    ' HUD padding
     m.hudPadding = int(m.screenWidth * 0.026)
     m.hudWidth = int(m.screenWidth * 0.23)
 end sub
 
-' Setup all UI elements with calculated positions
 sub setupLayout()
-    ' Background
     background = m.top.findNode("background")
     background.width = m.screenWidth
     background.height = m.screenHeight
@@ -169,13 +152,10 @@ sub setupLayout()
     laneBackdrop.width = m.laneAreaWidth
     laneBackdrop.height = m.screenHeight
     
-    ' Create lane dividers
     setupLaneDividers()
-    
-    ' Create receptors
     setupReceptors()
     
-    ' Feedback area (centered in lane area)
+    ' Center the feedback text in the lane area
     feedbackArea = m.top.findNode("feedbackArea")
     feedbackX = m.laneAreaX + (m.laneAreaWidth / 2)
     feedbackY = int(m.hitLineY - (m.screenHeight * 0.13))
@@ -189,23 +169,13 @@ sub setupLayout()
     comboLabel.width = int(m.laneAreaWidth * 0.5)
     comboLabel.translation = [int(-m.laneAreaWidth * 0.25), int(m.screenHeight * 0.056)]
     
-    ' HUD Left
     setupHudLeft()
-    
-    ' HUD Right
     setupHudRight()
-    
-    ' Progress bar
     setupProgressBar()
-    
-    ' Pause overlay
     setupPauseOverlay()
-    
-    ' Countdown overlay
     setupCountdownOverlay()
 end sub
 
-' Create lane dividers dynamically
 sub setupLaneDividers()
     laneDividers = m.top.findNode("laneDividers")
     dividerWidth = int(m.screenWidth * 0.002)
@@ -219,7 +189,6 @@ sub setupLaneDividers()
     end for
 end sub
 
-' Create receptors dynamically
 sub setupReceptors()
     receptors = m.top.findNode("receptors")
     receptors.translation = [0, m.receptorY]
@@ -230,7 +199,7 @@ sub setupReceptors()
     m.receptorBgs = []
     m.receptorArrows = []
     
-    ' Arrow offset from top of receptor (move down within receptor box)
+    ' Offset the arrow symbol so it's not at the very top
     arrowOffsetY = int(m.receptorHeight * 0.15)
     
     for i = 0 to 3
@@ -239,7 +208,6 @@ sub setupReceptors()
         xPos = m.lanePositions[i] + int((m.laneWidth - m.noteWidth) / 2)
         receptorGroup.translation = [xPos, 0]
         
-        ' Background
         bg = receptorGroup.createChild("Rectangle")
         bg.id = "receptor" + i.toStr() + "Bg"
         bg.width = m.noteWidth
@@ -247,7 +215,6 @@ sub setupReceptors()
         bg.color = "0x0f346080"
         m.receptorBgs.push(bg)
         
-        ' Arrow label - shifted down within receptor
         arrow = receptorGroup.createChild("Label")
         arrow.id = "receptor" + i.toStr() + "Arrow"
         arrow.text = arrowSymbols[i]
@@ -262,7 +229,6 @@ sub setupReceptors()
     end for
 end sub
 
-' Setup left HUD
 sub setupHudLeft()
     hudLeft = m.top.findNode("hudLeft")
     hudLeft.translation = [m.hudPadding, m.hudPadding]
@@ -282,7 +248,6 @@ sub setupHudLeft()
     scoreLabel.width = m.hudWidth
 end sub
 
-' Setup right HUD
 sub setupHudRight()
     hudRight = m.top.findNode("hudRight")
     hudRight.translation = [m.screenWidth - m.hudWidth - m.hudPadding, m.hudPadding]
@@ -291,10 +256,10 @@ sub setupHudRight()
     accuracyHeader.width = m.hudWidth
     
     accuracyLabel = m.top.findNode("accuracyLabel")
-    accuracyLabel.translation = [0, int(m.screenHeight * 0.038)]  ' Shifted down more
+    accuracyLabel.translation = [0, int(m.screenHeight * 0.038)]
     accuracyLabel.width = m.hudWidth
     
-    ' Stats group - positioned below accuracy with more space
+    ' Hit count stats below accuracy
     statsGroup = m.top.findNode("statsGroup")
     statsGroup.translation = [0, int(m.screenHeight * 0.12)]
     
@@ -332,7 +297,6 @@ sub setupHudRight()
     missCount.horizAlign = "right"
 end sub
 
-' Setup progress bar
 sub setupProgressBar()
     progressGroup = m.top.findNode("progressGroup")
     progressGroup.translation = [m.laneAreaX, m.progressY]
@@ -348,7 +312,6 @@ sub setupProgressBar()
     m.progressMaxWidth = m.laneAreaWidth
 end sub
 
-' Setup pause overlay
 sub setupPauseOverlay()
     pauseBg = m.top.findNode("pauseBg")
     pauseBg.width = m.screenWidth
@@ -370,7 +333,6 @@ sub setupPauseOverlay()
     pauseQuit.width = labelWidth
 end sub
 
-' Setup countdown overlay
 sub setupCountdownOverlay()
     countdownBg = m.top.findNode("countdownBg")
     countdownBg.width = m.screenWidth
@@ -383,7 +345,6 @@ sub setupCountdownOverlay()
     countdownText.translation = [(m.screenWidth - countdownSize) / 2, int(m.screenHeight * 0.42)]
 end sub
 
-' Called when song data is set
 sub onSongLoaded()
     songData = m.top.songData
     if songData = invalid then return
@@ -394,7 +355,6 @@ sub onSongLoaded()
     m.songArtist.text = songData.artist
     m.songLength = songData.length
     
-    ' Store audio path for playback
     if songData.audioPath <> invalid and songData.audioPath <> ""
         m.audioPath = songData.audioPath
         print "[Gameplay] Audio path: "; m.audioPath
@@ -407,7 +367,6 @@ sub onSongLoaded()
     startCountdown()
 end sub
 
-' Load beatmap from file
 sub loadBeatmap(beatmapPath as String)
     print "[Gameplay] Loading beatmap: "; beatmapPath
     
@@ -437,7 +396,7 @@ sub loadBeatmap(beatmapPath as String)
     print "[Gameplay] Loaded "; m.totalNotes; " notes"
 end sub
 
-' Create demo notes for testing
+' Generates a simple test pattern when no real beatmap exists
 sub createDemoNotes()
     m.beatmap = []
     noteTime = 2.0
@@ -453,7 +412,6 @@ sub createDemoNotes()
     print "[Gameplay] Created "; m.totalNotes; " demo notes"
 end sub
 
-' Start countdown before gameplay
 sub startCountdown()
     m.isCountingDown = true
     m.countdownValue = 3
@@ -462,7 +420,6 @@ sub startCountdown()
     m.countdownTimer.control = "start"
 end sub
 
-' Countdown timer tick
 sub onCountdownTick()
     m.countdownValue = m.countdownValue - 1
     
@@ -478,7 +435,6 @@ sub onCountdownTick()
     end if
 end sub
 
-' Start actual gameplay
 sub startGameplay()
     print "[Gameplay] Starting gameplay!"
     
@@ -493,13 +449,11 @@ sub startGameplay()
     
     updateHUD()
     
-    ' Start audio playback if audio path is set
     startAudio()
     
     m.gameTimer.control = "start"
 end sub
 
-' Start audio playback
 sub startAudio()
     if m.audioPath = "" or m.audioPath = invalid
         print "[Gameplay] No audio to play"
@@ -508,7 +462,6 @@ sub startAudio()
     
     print "[Gameplay] Starting audio: "; m.audioPath
     
-    ' Create content node for Audio
     contentNode = CreateObject("roSGNode", "ContentNode")
     contentNode.url = m.audioPath
     
@@ -516,7 +469,6 @@ sub startAudio()
     m.audioNode.control = "play"
 end sub
 
-' Stop audio playback
 sub stopAudio()
     if m.audioNode <> invalid
         m.audioNode.control = "stop"
@@ -524,7 +476,6 @@ sub stopAudio()
     end if
 end sub
 
-' Pause audio playback
 sub pauseAudio()
     if m.audioNode <> invalid
         m.audioNode.control = "pause"
@@ -532,7 +483,6 @@ sub pauseAudio()
     end if
 end sub
 
-' Resume audio playback
 sub resumeAudio()
     if m.audioNode <> invalid
         m.audioNode.control = "resume"
@@ -540,13 +490,11 @@ sub resumeAudio()
     end if
 end sub
 
-' Audio state change handler
 sub onAudioStateChange()
     state = m.audioNode.state
     print "[Gameplay] Audio state: "; state
 end sub
 
-' Main game loop tick
 sub onGameTick()
     if not m.isPlaying or m.isPaused then return
     
@@ -558,7 +506,7 @@ sub onGameTick()
     checkSongEnd()
 end sub
 
-' Spawn notes that are approaching
+' Spawn notes early enough that they reach the hit line on time
 sub spawnNotes()
     travelTime = (m.hitLineY - m.spawnY) / m.noteSpeed
     lookAheadTime = m.gameTime + travelTime
@@ -575,7 +523,6 @@ sub spawnNotes()
     end while
 end sub
 
-' Create a visual note
 sub spawnNote(noteData as Object)
     noteNode = m.notesContainer.createChild("Rectangle")
     noteNode.width = m.noteWidth
@@ -595,7 +542,6 @@ sub spawnNote(noteData as Object)
     m.activeNotes.push(activeNote)
 end sub
 
-' Update positions of active notes
 sub updateNotes()
     for each note in m.activeNotes
         if note.node <> invalid and not note.hit
@@ -607,7 +553,7 @@ sub updateNotes()
     end for
 end sub
 
-' Check for notes that were missed
+' Mark notes as missed if they fall past the threshold
 sub checkMissedNotes()
     missThreshold = m.hitLineY + int(m.screenHeight * 0.14)
     
@@ -630,7 +576,7 @@ sub checkMissedNotes()
     end while
 end sub
 
-' Handle lane key press
+' Find the closest note in this lane and see if we hit it
 sub pressLane(lane as Integer)
     if not m.isPlaying or m.isPaused then return
     
@@ -665,7 +611,6 @@ sub pressLane(lane as Integer)
     end if
 end sub
 
-' Register a perfect hit
 sub registerPerfect(note as Object)
     m.combo = m.combo + 1
     if m.combo > m.maxCombo then m.maxCombo = m.combo
@@ -679,7 +624,6 @@ sub registerPerfect(note as Object)
     updateHUD()
 end sub
 
-' Register a good hit
 sub registerGood(note as Object)
     m.combo = m.combo + 1
     if m.combo > m.maxCombo then m.maxCombo = m.combo
@@ -693,7 +637,6 @@ sub registerGood(note as Object)
     updateHUD()
 end sub
 
-' Register a miss
 sub registerMiss(note as Object)
     m.combo = 0
     m.misses = m.misses + 1
@@ -702,7 +645,6 @@ sub registerMiss(note as Object)
     updateHUD()
 end sub
 
-' Remove note from active list
 sub removeNote(index as Integer)
     if index >= 0 and index < m.activeNotes.count()
         note = m.activeNotes[index]
@@ -713,7 +655,6 @@ sub removeNote(index as Integer)
     end if
 end sub
 
-' Flash receptor when pressed
 sub flashReceptor(lane as Integer)
     if lane >= 0 and lane <= 3
         m.receptorBgs[lane].color = "0xFFFFFFFF"
@@ -723,7 +664,6 @@ sub flashReceptor(lane as Integer)
     end if
 end sub
 
-' Timer callback to reset receptor color
 sub onReceptorTimerFire(event as Object)
     timer = event.getRoSGNode()
     lane = timer.id.toInt()
@@ -733,7 +673,6 @@ sub onReceptorTimerFire(event as Object)
     end if
 end sub
 
-' Show hit feedback text
 sub showFeedback(feedbackText as String, color as String)
     m.hitFeedback.text = feedbackText
     m.hitFeedback.color = color
@@ -743,12 +682,10 @@ sub showFeedback(feedbackText as String, color as String)
     m.feedbackTimer.control = "start"
 end sub
 
-' Clear feedback text
 sub clearFeedback()
     m.hitFeedback.text = ""
 end sub
 
-' Update HUD elements
 sub updateHUD()
     m.scoreLabel.text = m.score.toStr()
     m.perfectCount.text = m.perfects.toStr()
@@ -764,7 +701,6 @@ sub updateHUD()
     end if
 end sub
 
-' Format number with decimals
 function formatNumber(num as Float, decimals as Integer) as String
     mult = 1
     for i = 1 to decimals
@@ -774,7 +710,6 @@ function formatNumber(num as Float, decimals as Integer) as String
     return str(rounded).trim()
 end function
 
-' Update progress bar
 sub updateProgress()
     if m.songLength > 0
         progress = m.gameTime / m.songLength
@@ -783,8 +718,8 @@ sub updateProgress()
     end if
 end sub
 
-' Check if song has ended
 sub checkSongEnd()
+    ' End when all notes are done or we've gone past the song length
     if m.nextNoteIndex >= m.beatmap.count() and m.activeNotes.count() = 0
         endGame()
     else if m.gameTime > m.songLength + 2
@@ -792,16 +727,15 @@ sub checkSongEnd()
     end if
 end sub
 
-' End the game
 sub endGame()
     print "[Gameplay] Game ended!"
     
     m.isPlaying = false
     m.gameTimer.control = "stop"
     
-    ' Stop audio playback
     stopAudio()
     
+    ' Clean up any notes still on screen
     for each note in m.activeNotes
         if note.node <> invalid
             note.node.getParent().removeChild(note.node)
@@ -831,7 +765,6 @@ sub endGame()
     m.top.gameResult = result
 end sub
 
-' Calculate grade based on accuracy
 function calculateGrade() as String
     accuracy = calculateAccuracy()
     
@@ -843,14 +776,12 @@ function calculateGrade() as String
     return "F"
 end function
 
-' Calculate accuracy percentage
 function calculateAccuracy() as Float
     totalHits = m.perfects + m.goods + m.misses
     if totalHits = 0 then return 100.0
     return ((m.perfects * 100.0) + (m.goods * 50.0)) / totalHits
 end function
 
-' Save high score to registry
 sub saveHighScore(songId as String, newScore as Integer)
     section = CreateObject("roRegistrySection", "highscores")
     currentScore = section.Read(songId)
@@ -862,7 +793,6 @@ sub saveHighScore(songId as String, newScore as Integer)
     end if
 end sub
 
-' Toggle pause
 sub togglePause()
     m.isPaused = not m.isPaused
     m.pauseOverlay.visible = m.isPaused
@@ -875,13 +805,11 @@ sub togglePause()
     end if
 end sub
 
-' Absolute value helper
 function absoluteValue(num as Float) as Float
     if num < 0 then return -num
     return num
 end function
 
-' Handle remote input
 function onKeyEvent(key as String, press as Boolean) as Boolean
     if not press then return false
     

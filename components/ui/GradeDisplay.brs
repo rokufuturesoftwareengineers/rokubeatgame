@@ -1,4 +1,4 @@
-' GradeDisplay.brs - Grade letter display component logic (dynamically sized)
+' Big grade letter display (S/A/B/C/D/F)
 
 sub init()
     m.bg = m.top.findNode("gradeBg")

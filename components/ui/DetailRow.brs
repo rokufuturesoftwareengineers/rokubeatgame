@@ -1,4 +1,4 @@
-' DetailRow.brs - Label-value pair component logic (dynamically sized)
+' Label-value pair row, auto-sizes itself
 
 sub init()
     m.labelNode = m.top.findNode("labelText")

@@ -1,11 +1,9 @@
-' MenuButton.brs
-' Reusable button component logic
+' Generic menu button with selected state
 
 sub init()
     m.bg = m.top.findNode("buttonBg")
     m.labelNode = m.top.findNode("buttonLabel")
 
-    ' Set initial colors
     m.primaryColor = "0x6c5ce7FF"
     m.secondaryColor = "0x2d3436FF"
     m.primaryTextColor = "0xFFFFFFFF"

@@ -1,22 +1,19 @@
-' Main.brs
-' Entry point for Roku Osu Mania
-' A 4-key rhythm game inspired by Osu-Mania
+' App entry point - kicks off the SceneGraph UI
 
 sub Main()
     print "========================================"
     print "  Roku Osu Mania - Starting..."
     print "========================================"
     
-    ' Initialize the SceneGraph application
     screen = CreateObject("roSGScreen")
     m.port = CreateObject("roMessagePort")
     screen.setMessagePort(m.port)
     
-    ' Create the main scene
     scene = screen.CreateScene("MainScene")
     screen.show()
+    ' vscode_rdb_on_device_component_entry
     
-    ' Main event loop
+    ' Keep the app alive until the user closes it
     while true
         msg = wait(0, m.port)
         msgType = type(msg)

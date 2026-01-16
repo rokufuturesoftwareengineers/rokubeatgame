@@ -1,5 +1,4 @@
-' HitBreakdownRow.brs
-' Hit type breakdown row component logic
+' Shows perfect/great/good/miss counts
 
 sub init()
     m.bg = m.top.findNode("rowBg")

@@ -1,5 +1,4 @@
-' Receptor.brs
-' Lane receptor/target component logic
+' Hit receptor at the bottom of each lane
 
 sub init()
     m.bg = m.top.findNode("receptorBg")

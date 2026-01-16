@@ -1,4 +1,4 @@
-' ScoreCard.brs - Score display card component logic (dynamically sized)
+' Displays a stat with label above, value below
 
 sub init()
     m.cardBg = m.top.findNode("cardBg")

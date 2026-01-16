@@ -1,22 +1,14 @@
-' SongSelect.brs - Song selection screen (dynamically scaled)
-' All positions use percentages of screen dimensions for device-agnostic layout
+' Song library browser - pick a track to play
+' Layout scales based on screen resolution
 
 sub init()
     print "[SongSelect] Initializing..."
     
-    ' Initialize screen dimensions
     initScreenDimensions()
-    
-    ' Calculate layout values
     calculateLayout()
-    
-    ' Get UI references
     setupReferences()
-    
-    ' Apply dynamic layout
     setupLayout()
     
-    ' State
     m.songs = []
     m.songItems = []
     m.selectedIndex = 0
@@ -28,7 +20,6 @@ sub init()
     m.selectedTextColor = "0xFFFFFFFF"
     m.unselectedTextColor = "0xb2bec3FF"
     
-    ' Set focus
     m.top.setFocus(true)
     
     print "[SongSelect] Initialization complete"
@@ -40,86 +31,69 @@ sub initScreenDimensions()
     m.screenWidth = displaySize.w
     m.screenHeight = displaySize.h
     
-    ' Scale factor based on 720p reference
     m.scaleFactor = m.screenHeight / 720.0
 end sub
 
 sub calculateLayout()
-    ' =========================================
-    ' LAYOUT PERCENTAGES (based on 720p reference)
-    ' =========================================
+    ' --- Layout percentages (720p reference) ---
     
-    ' Margins and padding
-    m.marginH = int(m.screenWidth * 0.02)        ' ~2% horizontal margin
+    m.marginH = int(m.screenWidth * 0.02)
     m.marginV = int(m.screenHeight * 0.02)       ' ~2% vertical margin
     m.paddingSmall = int(10 * m.scaleFactor)
     m.paddingMed = int(15 * m.scaleFactor)
     m.panelGap = int(20 * m.scaleFactor)
     
-    ' Header
     m.headerHeight = int(53 * m.scaleFactor)
     m.headerTitleY = int(17 * m.scaleFactor)
     
-    ' Content area (below header)
     m.contentY = m.headerHeight + m.paddingMed
-    m.contentHeight = m.screenHeight - m.contentY - int(80 * m.scaleFactor)  ' Leave room for footer
+    m.contentHeight = m.screenHeight - m.contentY - int(80 * m.scaleFactor)
     
-    ' Left panel (song list) - ~55% of width
+    ' Song list panel - ~55% of screen width
     m.listPanelX = m.marginH
     m.listPanelY = m.contentY
     m.listPanelWidth = int(m.screenWidth * 0.55)
     m.listPanelHeight = m.contentHeight
     
-    ' Song list item dimensions
     m.itemHeight = int(47 * m.scaleFactor)
     m.itemWidth = m.listPanelWidth - (m.paddingSmall * 2)
     m.visibleItems = int(m.listPanelHeight / m.itemHeight) - 1
     
-    ' Right panel (details) - ~35% of width
+    ' Details panel - ~35% of screen width
     m.detailsPanelX = m.listPanelX + m.listPanelWidth + m.panelGap
     m.detailsPanelY = m.contentY
     m.detailsPanelWidth = int(m.screenWidth * 0.35)
     m.detailsPanelHeight = m.contentHeight
     
-    ' Details panel internal layout
     m.detailsPadding = int(20 * m.scaleFactor)
     m.artworkWidth = m.detailsPanelWidth - (m.detailsPadding * 2)
     m.artworkHeight = int(120 * m.scaleFactor)
     
-    ' Metadata rows
     m.rowHeight = int(24 * m.scaleFactor)
     m.rowSpacing = int(8 * m.scaleFactor)
     
-    ' Play button
     m.playBtnWidth = m.detailsPanelWidth - (m.detailsPadding * 2)
     m.playBtnHeight = int(40 * m.scaleFactor)
     
-    ' Footer - centered with details panel
     m.instructionsY = m.screenHeight - int(30 * m.scaleFactor)
-    ' Center footer with the details panel
     m.instructionsX = m.detailsPanelX + (m.detailsPanelWidth / 2)
     
-    ' No songs message
     m.noSongsY = int(m.screenHeight * 0.4)
 end sub
 
 sub setupReferences()
-    ' Background
     m.background = m.top.findNode("background")
     
-    ' Header
     m.headerGroup = m.top.findNode("headerGroup")
     m.headerBg = m.top.findNode("headerBg")
     m.headerTitle = m.top.findNode("headerTitle")
     
-    ' List panel
     m.listPanel = m.top.findNode("listPanel")
     m.listPanelBg = m.top.findNode("listPanelBg")
     m.songListContainer = m.top.findNode("songListContainer")
     m.scrollUpIndicator = m.top.findNode("scrollUpIndicator")
     m.scrollDownIndicator = m.top.findNode("scrollDownIndicator")
     
-    ' Details panel
     m.detailsPanel = m.top.findNode("detailsPanel")
     m.detailsPanelBg = m.top.findNode("detailsPanelBg")
     m.artworkGroup = m.top.findNode("artworkGroup")
@@ -128,7 +102,6 @@ sub setupReferences()
     m.detailTitle = m.top.findNode("detailTitle")
     m.detailArtist = m.top.findNode("detailArtist")
     
-    ' Metadata rows
     m.difficultyRow = m.top.findNode("difficultyRow")
     m.difficultyLabel = m.top.findNode("difficultyLabel")
     m.difficultyValue = m.top.findNode("difficultyValue")
@@ -141,36 +114,26 @@ sub setupReferences()
     m.bestScoreLabel = m.top.findNode("bestScoreLabel")
     m.bestScoreValue = m.top.findNode("bestScoreValue")
     
-    ' Play button
     m.playButton = m.top.findNode("playButton")
     m.playBtnBg = m.top.findNode("playBtnBg")
     m.playBtnLabel = m.top.findNode("playBtnLabel")
     
-    ' Footer and messages
     m.instructions = m.top.findNode("instructions")
     m.noSongsLabel = m.top.findNode("noSongsLabel")
 end sub
 
 sub setupLayout()
-    ' Background - full screen
     m.background.width = m.screenWidth
     m.background.height = m.screenHeight
     
-    ' Header
     setupHeader()
-    
-    ' List panel
     setupListPanel()
-    
-    ' Details panel
     setupDetailsPanel()
     
-    ' Footer - centered with details panel
     m.instructions.translation = [m.detailsPanelX, m.instructionsY]
     m.instructions.width = m.detailsPanelWidth
     m.instructions.horizAlign = "center"
     
-    ' No songs message
     m.noSongsLabel.translation = [m.screenWidth / 2, m.noSongsY]
     m.noSongsLabel.width = m.screenWidth
 end sub
@@ -195,7 +158,6 @@ sub setupListPanel()
     
     m.songListContainer.translation = [m.paddingSmall, m.paddingSmall]
     
-    ' Scroll indicators
     m.scrollUpIndicator.width = m.listPanelWidth
     m.scrollUpIndicator.translation = [0, -int(5 * m.scaleFactor)]
     
@@ -210,10 +172,8 @@ sub setupDetailsPanel()
     m.detailsPanelBg.height = m.detailsPanelHeight
     m.detailsPanelBg.translation = [0, 0]
     
-    ' Calculate internal positions
     currentY = m.detailsPadding
     
-    ' Artwork
     m.artworkGroup.translation = [m.detailsPadding, currentY]
     m.artworkBg.width = m.artworkWidth
     m.artworkBg.height = m.artworkHeight
@@ -224,32 +184,25 @@ sub setupDetailsPanel()
     
     currentY = currentY + m.artworkHeight + m.paddingMed
     
-    ' Song title
     m.detailTitle.width = m.artworkWidth
     m.detailTitle.translation = [m.detailsPadding, currentY]
     currentY = currentY + int(30 * m.scaleFactor)
     
-    ' Artist
     m.detailArtist.width = m.artworkWidth
     m.detailArtist.translation = [m.detailsPadding, currentY]
     currentY = currentY + int(30 * m.scaleFactor)
     
-    ' Metadata rows
     rowWidth = m.artworkWidth
     
-    ' Difficulty row
     setupMetadataRow(m.difficultyRow, m.difficultyLabel, m.difficultyValue, currentY, rowWidth)
     currentY = currentY + m.rowHeight + m.rowSpacing
     
-    ' Duration row
     setupMetadataRow(m.durationRow, m.durationLabel, m.durationValue, currentY, rowWidth)
     currentY = currentY + m.rowHeight + m.rowSpacing
     
-    ' Best score row
     setupMetadataRow(m.bestScoreRow, m.bestScoreLabel, m.bestScoreValue, currentY, rowWidth)
     currentY = currentY + m.rowHeight + m.paddingMed
     
-    ' Play button
     m.playButton.translation = [m.detailsPadding, currentY]
     m.playBtnBg.width = m.playBtnWidth
     m.playBtnBg.height = m.playBtnHeight
@@ -266,7 +219,6 @@ sub setupMetadataRow(rowGroup as object, labelNode as object, valueNode as objec
     valueNode.translation = [0, 0]
 end sub
 
-' Called when song catalog is set
 sub onCatalogLoaded()
     catalog = m.top.songCatalog
     
@@ -281,22 +233,18 @@ sub onCatalogLoaded()
     
     print "[SongSelect] Loaded "; m.songs.count(); " songs"
     
-    ' Build song list UI
     buildSongList()
     
-    ' Select first song
     m.selectedIndex = 0
     updateSelection()
     updateDetails()
 end sub
 
-' Build the visual song list
 sub buildSongList()
-    ' Clear existing
     m.songListContainer.removeChildrenIndex(m.songListContainer.getChildCount(), 0)
     m.songItems = []
-    m.songItemBgs = []      ' Store direct references to backgrounds
-    m.songItemTitles = []   ' Store direct references to title labels
+    m.songItemBgs = []
+    m.songItemTitles = []
     
     yPos = 0
     
@@ -313,16 +261,15 @@ sub buildSongList()
         bg.height = m.itemHeight - int(3 * m.scaleFactor)
         bg.color = m.unselectedBgColor
         
-        ' Layout: [Number | Title/Artist | Duration | Stars]
+        ' Row layout: [#] [Title/Artist] [Duration] [Stars]
         numWidth = int(35 * m.scaleFactor)
         titleStartX = int(40 * m.scaleFactor)
-        titleWidth = int(m.itemWidth * 0.40)  ' Limited width to prevent overflow
-        durStartX = int(m.itemWidth * 0.70)   ' Duration starts at 70%
-        durWidth = int(m.itemWidth * 0.08)    ' Duration gets 8% width
-        starsStartX = int(m.itemWidth * 0.79) ' Stars start right after duration
-        starsWidth = int(m.itemWidth * 0.19)  ' Stars get remaining space
+        titleWidth = int(m.itemWidth * 0.40)
+        durStartX = int(m.itemWidth * 0.70)
+        durWidth = int(m.itemWidth * 0.08)
+        starsStartX = int(m.itemWidth * 0.79)
+        starsWidth = int(m.itemWidth * 0.19)
         
-        ' Song number
         numLabel = item.createChild("Label")
         numLabel.translation = [int(10 * m.scaleFactor), int(14 * m.scaleFactor)]
         numLabel.text = (i + 1).toStr()
@@ -330,7 +277,6 @@ sub buildSongList()
         numLabel.color = "0x636e72FF"
         numLabel.width = numWidth
         
-        ' Song title - smaller font to fit in box
         titleLabel = item.createChild("Label")
         titleLabel.translation = [titleStartX, int(5 * m.scaleFactor)]
         titleLabel.text = song.title
@@ -339,7 +285,6 @@ sub buildSongList()
         titleLabel.width = titleWidth
         titleLabel.maxLines = 1
         
-        ' Artist - smaller font to fit in box
         artistLabel = item.createChild("Label")
         artistLabel.translation = [titleStartX, int(22 * m.scaleFactor)]
         artistLabel.text = song.artist
@@ -348,7 +293,6 @@ sub buildSongList()
         artistLabel.width = titleWidth
         artistLabel.maxLines = 1
         
-        ' Duration - right-aligned, close to stars
         durLabel = item.createChild("Label")
         durLabel.translation = [durStartX, int(14 * m.scaleFactor)]
         durLabel.text = formatDuration(song.length)
@@ -357,7 +301,6 @@ sub buildSongList()
         durLabel.width = durWidth
         durLabel.horizAlign = "right"
         
-        ' Difficulty stars - right-aligned to edge
         starsLabel = item.createChild("Label")
         starsLabel.translation = [starsStartX, int(14 * m.scaleFactor)]
         starsLabel.text = getDifficultyStars(song.difficultyRating)
@@ -366,7 +309,6 @@ sub buildSongList()
         starsLabel.width = starsWidth
         starsLabel.horizAlign = "right"
         
-        ' Store references
         m.songItems.push(item)
         m.songItemBgs.push(bg)
         m.songItemTitles.push(titleLabel)
@@ -377,7 +319,6 @@ sub buildSongList()
     updateScrollIndicators()
 end sub
 
-' Get difficulty stars string
 function getDifficultyStars(rating as Integer) as String
     stars = ""
     maxStars = 7
@@ -391,7 +332,6 @@ function getDifficultyStars(rating as Integer) as String
     return stars
 end function
 
-' Format seconds to M:SS
 function formatDuration(seconds as Integer) as String
     mins = int(seconds / 60)
     secs = seconds mod 60
@@ -402,7 +342,6 @@ function formatDuration(seconds as Integer) as String
     end if
 end function
 
-' Update visual selection
 sub updateSelection()
     for i = 0 to m.songItemBgs.count() - 1
         bg = m.songItemBgs[i]
@@ -417,24 +356,19 @@ sub updateSelection()
         end if
     end for
     
-    ' Scroll if needed
     scrollToSelected()
 end sub
 
-' Scroll list to show selected item
 sub scrollToSelected()
     visibleHeight = m.visibleItems * m.itemHeight
     
-    ' Calculate required scroll
     selectedY = m.selectedIndex * m.itemHeight
     currentScroll = -m.songListContainer.translation[1]
     
     if selectedY < currentScroll
-        ' Scroll up
         newScroll = selectedY
         m.songListContainer.translation = [m.paddingSmall, -newScroll]
     else if selectedY + m.itemHeight > currentScroll + visibleHeight
-        ' Scroll down
         newScroll = selectedY + m.itemHeight - visibleHeight
         m.songListContainer.translation = [m.paddingSmall, -newScroll]
     end if
@@ -442,7 +376,6 @@ sub scrollToSelected()
     updateScrollIndicators()
 end sub
 
-' Update scroll arrow indicators
 sub updateScrollIndicators()
     if m.songs.count() <= m.visibleItems
         m.scrollUpIndicator.visible = false
@@ -457,7 +390,6 @@ sub updateScrollIndicators()
     m.scrollDownIndicator.visible = (currentScroll < maxScroll)
 end sub
 
-' Update detail panel
 sub updateDetails()
     if m.songs.count() = 0 then return
     
@@ -468,7 +400,6 @@ sub updateDetails()
     m.difficultyValue.text = getDifficultyStars(song.difficultyRating) + " " + song.difficulty
     m.durationValue.text = formatDuration(song.length)
 
-    ' Load best score
     bestScore = loadBestScore(song.id)
     if bestScore > 0
         m.bestScoreValue.text = bestScore.toStr()
@@ -477,7 +408,6 @@ sub updateDetails()
     end if
 end sub
 
-' Load best score from registry
 function loadBestScore(songId as String) as Integer
     section = CreateObject("roRegistrySection", "highscores")
     scoreStr = section.Read(songId)
@@ -487,7 +417,6 @@ function loadBestScore(songId as String) as Integer
     return 0
 end function
 
-' Move selection up
 sub moveUp()
     if m.songs.count() = 0 then return
     
@@ -500,7 +429,6 @@ sub moveUp()
     updateDetails()
 end sub
 
-' Move selection down
 sub moveDown()
     if m.songs.count() = 0 then return
     
@@ -513,7 +441,6 @@ sub moveDown()
     updateDetails()
 end sub
 
-' Select current song
 sub selectSong()
     if m.songs.count() = 0 then return
     
@@ -522,7 +449,6 @@ sub selectSong()
     m.top.selectedSong = song
 end sub
 
-' Handle remote input
 function onKeyEvent(key as String, press as Boolean) as Boolean
     if not press then return false
     

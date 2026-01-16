@@ -1,11 +1,9 @@
-' MainScene.brs
-' Central controller for Roku Osu Mania
-' Handles state machine and screen transitions
+' Central hub - manages game state and screen transitions
 
 sub init()
     print "[MainScene] Initializing..."
     
-    ' Get screen dimensions dynamically
+    ' Detect display resolution (default to 720p if unavailable)
     m.screenWidth = 1280
     m.screenHeight = 720
     
@@ -18,7 +16,6 @@ sub init()
     
     print "[MainScene] Screen size: "; m.screenWidth; "x"; m.screenHeight
     
-    ' Get references
     m.screenContainer = m.top.findNode("screenContainer")
     m.background = m.top.findNode("background")
     
@@ -28,24 +25,19 @@ sub init()
         m.background.height = m.screenHeight
     end if
     
-    ' Initialize state
     m.currentScreen = invalid
     m.top.gameState = "START_MENU"
     
-    ' Load song catalog
     m.songCatalog = loadSongCatalog()
     
-    ' Observe state changes
     m.top.observeField("gameState", "onGameStateChange")
     
-    ' Set focus and show initial screen
     m.top.setFocus(true)
     showStartMenu()
     
     print "[MainScene] Initialization complete"
 end sub
 
-' Load song catalog from JSON
 function loadSongCatalog() as Object
     catalog = {songs: []}
     
@@ -66,7 +58,7 @@ function loadSongCatalog() as Object
     return catalog
 end function
 
-' Demo catalog for testing without real songs
+' Fallback data when no songs are installed
 function getDemoCatalog() as Object
     return {
         songs: [
@@ -114,15 +106,12 @@ function getDemoCatalog() as Object
     }
 end function
 
-' Handle game state transitions
 sub onGameStateChange()
     newState = m.top.gameState
     print "[MainScene] State transition to: "; newState
     
-    ' Remove current screen
     clearCurrentScreen()
     
-    ' Show appropriate screen
     if newState = "START_MENU"
         showStartMenu()
     else if newState = "SONG_SELECT"
@@ -134,7 +123,6 @@ sub onGameStateChange()
     end if
 end sub
 
-' Clear current screen
 sub clearCurrentScreen()
     if m.currentScreen <> invalid
         m.screenContainer.removeChild(m.currentScreen)
@@ -142,7 +130,7 @@ sub clearCurrentScreen()
     end if
 end sub
 
-' === Screen Display Functions ===
+' --- Screen factories ---
 
 sub showStartMenu()
     print "[MainScene] Showing StartMenu"
@@ -158,7 +146,7 @@ sub onStartMenuAction()
     if action = "play"
         m.top.gameState = "SONG_SELECT"
     else if action = "quit"
-        ' Exit handled by main loop
+        ' Main loop handles the actual exit
     end if
 end sub
 
@@ -232,7 +220,7 @@ sub onResultsAction()
     end if
 end sub
 
-' Key event passthrough (let children handle)
+' Let child screens handle their own input
 function onKeyEvent(key as String, press as Boolean) as Boolean
     return false
 end function

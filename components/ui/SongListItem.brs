@@ -1,4 +1,4 @@
-' SongListItem.brs - Song list entry component logic (dynamically sized)
+' Song entry in the song list
 
 sub init()
     m.bg = m.top.findNode("itemBg")
