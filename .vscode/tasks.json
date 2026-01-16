@@ -130,13 +130,14 @@
             "id": "rokuIP",
             "type": "promptString",
             "description": "Roku device IP address",
-            "default": "192.168.1.100"
+            "default": "192.168.7.236"
         },
         {
             "id": "rokuPassword",
             "type": "promptString",
             "description": "Roku developer password",
-            "password": true
+            "password": true,
+            "default": "roku6"
         }
     ]
 }

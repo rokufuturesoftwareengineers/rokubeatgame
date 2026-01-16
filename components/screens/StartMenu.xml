@@ -17,10 +17,8 @@
         <!-- Title section with glow background -->
         <Group id="titleGroup">
             <Rectangle id="titleGlow" color="0x0f3460AA" />
-            <Label id="titleMain" text="OSU MANIA" font="font:LargeBoldSystemFont" 
-                   color="0xe94560FF" horizAlign="center" />
-            <Label id="titleSub" text="for Roku" font="font:MediumSystemFont" 
-                   color="0x888888FF" horizAlign="center" />
+            <Label id="titleMain" text="Beat Game" font="font:LargeBoldSystemFont" 
+                   color="0xe94560FF" horizAlign="center" vertAlign="center" />
         </Group>
         
         <!-- Decorative line -->
@@ -47,12 +45,12 @@
                    color="0xFFFFFFFF" horizAlign="center" />
             <Label id="lanesLabel" text="← Lane 1  |  ↑ Lane 2  |  ↓ Lane 3  |  → Lane 4" 
                    font="font:SmallSystemFont" color="0xAAAAAAFF" horizAlign="center" />
-            <Label id="instructionLabel" text="OK to hit notes in time with the music!" 
+            <Label id="instructionLabel" text="Hit Notes In Time With The Music!" 
                    font="font:SmallSystemFont" color="0x888888FF" horizAlign="center" />
         </Group>
         
         <!-- Footer -->
-        <Label id="versionLabel" text="v1.0.0 - Press OK to select" font="font:SmallSystemFont" 
+        <Label id="versionLabel" text="Press OK to select" font="font:SmallSystemFont" 
                color="0x444444FF" horizAlign="center" />
         
         <!-- Animated decorative notes -->
