@@ -10,7 +10,7 @@
     <script type="text/brightscript" uri="pkg:/components/screens/SongSelect.brs" />
 
     <interface>
-        <field id="songCatalog" type="assocarray" onChange="onCatalogLoaded" />
+        <field id="songCatalog" type="assocarray" alwaysNotify="true" />
         <field id="selectedSong" type="assocarray" alwaysNotify="true" />
         <field id="action" type="string" alwaysNotify="true" />
     </interface>

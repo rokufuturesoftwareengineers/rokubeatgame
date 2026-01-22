@@ -46,6 +46,8 @@
             <Group id="statsGroup">
                 <Label id="perfectHeader" text="PERFECT" font="font:SmallSystemFont" color="0x6c5ce7FF" />
                 <Label id="perfectCount" text="0" font="font:SmallBoldSystemFont" color="0x6c5ce7FF" />
+                <Label id="greatHeader" text="GREAT" font="font:SmallSystemFont" color="0xfdcb6eFF" />
+                <Label id="greatCount" text="0" font="font:SmallBoldSystemFont" color="0xfdcb6eFF" />
                 <Label id="goodHeader" text="GOOD" font="font:SmallSystemFont" color="0x00b894FF" />
                 <Label id="goodCount" text="0" font="font:SmallBoldSystemFont" color="0x00b894FF" />
                 <Label id="missHeader" text="MISS" font="font:SmallSystemFont" color="0xd63031FF" />

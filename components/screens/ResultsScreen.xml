@@ -66,6 +66,13 @@
                 <Label id="perfectValue" text="0" font="font:SmallBoldSystemFont" color="0xFFFFFFFF" horizAlign="right" />
             </Group>
             
+            <!-- Great row -->
+            <Group id="greatRow">
+                <Rectangle id="greatBg" color="0xfdcb6eAA" />
+                <Label id="greatLabel" text="GREAT" font="font:SmallBoldSystemFont" color="0xFFFFFFFF" />
+                <Label id="greatValue" text="0" font="font:SmallBoldSystemFont" color="0xFFFFFFFF" horizAlign="right" />
+            </Group>
+            
             <!-- Good row -->
             <Group id="goodRow">
                 <Rectangle id="goodBg" color="0x00b894AA" />

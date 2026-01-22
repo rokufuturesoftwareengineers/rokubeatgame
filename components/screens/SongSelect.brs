@@ -11,6 +11,8 @@ sub init()
     
     m.songs = []
     m.songItems = []
+    m.songItemBgs = []
+    m.songItemTitles = []
     m.selectedIndex = 0
     m.scrollOffset = 0
     
@@ -20,7 +22,16 @@ sub init()
     m.selectedTextColor = "0xFFFFFFFF"
     m.unselectedTextColor = "0xb2bec3FF"
     
+    ' Observe catalog changes from within BrightScript (more reliable than XML onChange)
+    m.top.observeField("songCatalog", "onCatalogLoaded")
+    
     m.top.setFocus(true)
+    
+    ' Check if catalog was already set before observer was registered
+    if m.top.songCatalog <> invalid
+        print "[SongSelect] Catalog already set, loading songs..."
+        loadSongsFromCatalog()
+    end if
     
     print "[SongSelect] Initialization complete"
 end sub
@@ -219,7 +230,12 @@ sub setupMetadataRow(rowGroup as object, labelNode as object, valueNode as objec
     valueNode.translation = [0, 0]
 end sub
 
-sub onCatalogLoaded()
+sub onCatalogLoaded(event = invalid as dynamic)
+    print "[SongSelect] onCatalogLoaded triggered"
+    loadSongsFromCatalog()
+end sub
+
+sub loadSongsFromCatalog()
     catalog = m.top.songCatalog
     
     if catalog = invalid or catalog.songs = invalid or catalog.songs.count() = 0
@@ -241,7 +257,10 @@ sub onCatalogLoaded()
 end sub
 
 sub buildSongList()
-    m.songListContainer.removeChildrenIndex(m.songListContainer.getChildCount(), 0)
+    ' Clear existing song items
+    while m.songListContainer.getChildCount() > 0
+        m.songListContainer.removeChildIndex(0)
+    end while
     m.songItems = []
     m.songItemBgs = []
     m.songItemTitles = []

@@ -61,7 +61,7 @@ sub calculateLayout()
     m.breakdownX = m.panelMargin + m.panelWidth + m.panelGap
     m.breakdownY = int(m.screenHeight * 0.28)
     m.breakdownWidth = m.panelWidth
-    m.breakdownHeight = int(200 * m.scaleFactor)
+    m.breakdownHeight = int(245 * m.scaleFactor)  ' Expanded for 4 rows
     
     m.hitRowHeight = int(36 * m.scaleFactor)
     m.hitRowWidth = m.breakdownWidth - (m.paddingMed * 2)
@@ -118,6 +118,11 @@ sub setupReferences()
     m.perfectBg = m.top.findNode("perfectBg")
     m.perfectLabel = m.top.findNode("perfectLabel")
     m.perfectValue = m.top.findNode("perfectValue")
+    
+    m.greatRow = m.top.findNode("greatRow")
+    m.greatBg = m.top.findNode("greatBg")
+    m.greatLabel = m.top.findNode("greatLabel")
+    m.greatValue = m.top.findNode("greatValue")
     
     m.goodRow = m.top.findNode("goodRow")
     m.goodBg = m.top.findNode("goodBg")
@@ -237,8 +242,9 @@ sub setupBreakdownPanel()
     rowSpacing = m.hitRowHeight + int(8 * m.scaleFactor)
     
     setupHitRow(m.perfectRow, m.perfectBg, m.perfectLabel, m.perfectValue, rowStartY)
-    setupHitRow(m.goodRow, m.goodBg, m.goodLabel, m.goodValue, rowStartY + rowSpacing)
-    setupHitRow(m.missRow, m.missBg, m.missLabel, m.missValue, rowStartY + (rowSpacing * 2))
+    setupHitRow(m.greatRow, m.greatBg, m.greatLabel, m.greatValue, rowStartY + rowSpacing)
+    setupHitRow(m.goodRow, m.goodBg, m.goodLabel, m.goodValue, rowStartY + (rowSpacing * 2))
+    setupHitRow(m.missRow, m.missBg, m.missLabel, m.missValue, rowStartY + (rowSpacing * 3))
 end sub
 
 sub setupHitRow(rowGroup as object, bg as object, labelLeft as object, labelRight as object, yPos as integer)
@@ -317,9 +323,28 @@ sub onResultSet()
         m.maxComboValue.text = result.maxCombo.ToStr() + "x"
     end if
     
-    if result.hits <> invalid then
+    ' Handle both direct fields and hits object formats
+    if result.perfects <> invalid then
+        m.perfectValue.text = result.perfects.ToStr()
+    else if result.hits <> invalid then
         m.perfectValue.text = getHitCount(result.hits, "perfect").ToStr()
+    end if
+    
+    if result.greats <> invalid then
+        m.greatValue.text = result.greats.ToStr()
+    else if result.hits <> invalid then
+        m.greatValue.text = getHitCount(result.hits, "great").ToStr()
+    end if
+    
+    if result.goods <> invalid then
+        m.goodValue.text = result.goods.ToStr()
+    else if result.hits <> invalid then
         m.goodValue.text = getHitCount(result.hits, "good").ToStr()
+    end if
+    
+    if result.misses <> invalid then
+        m.missValue.text = result.misses.ToStr()
+    else if result.hits <> invalid then
         m.missValue.text = getHitCount(result.hits, "miss").ToStr()
     end if
     
@@ -331,9 +356,12 @@ sub onResultSet()
         m.newHighScoreLabel.visible = false
     end if
     
+    ' Calculate total notes from direct fields or hits object
     totalNotes = 0
-    if result.hits <> invalid then
-        totalNotes = getHitCount(result.hits, "perfect") + getHitCount(result.hits, "good") + getHitCount(result.hits, "miss")
+    if result.perfects <> invalid then
+        totalNotes = result.perfects + result.greats + result.goods + result.misses
+    else if result.hits <> invalid then
+        totalNotes = getHitCount(result.hits, "perfect") + getHitCount(result.hits, "great") + getHitCount(result.hits, "good") + getHitCount(result.hits, "miss")
     end if
     m.statsLabel.text = "Total Notes: " + totalNotes.ToStr()
 end sub

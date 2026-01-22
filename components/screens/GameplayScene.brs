@@ -1,5 +1,5 @@
-' The main gameplay loop - handles notes, timing, and scoring
-' Layout math is resolution-independent so this works on any Roku
+' Core gameplay - note rendering, hit detection, scoring
+' All layout math scales to any Roku resolution
 
 sub init()
     print "[Gameplay] Initializing..."
@@ -16,6 +16,7 @@ sub init()
     m.hitFeedback = m.top.findNode("hitFeedback")
     m.comboLabel = m.top.findNode("comboLabel")
     m.perfectCount = m.top.findNode("perfectCount")
+    m.greatCount = m.top.findNode("greatCount")
     m.goodCount = m.top.findNode("goodCount")
     m.missCount = m.top.findNode("missCount")
     m.progressBar = m.top.findNode("progressBar")
@@ -23,15 +24,18 @@ sub init()
     m.countdownOverlay = m.top.findNode("countdownOverlay")
     m.countdownText = m.top.findNode("countdownText")
     
-    ' Lane colors match the arrow indicators
+    ' Match lane colors to arrow indicators
     m.arrowColors = ["0xe94560FF", "0x00cec9FF", "0xfdcb6eFF", "0x6c5ce7FF"]
     
-    ' Hit detection windows - tweak these to adjust game feel
-    m.perfectWindow = 0.05     ' ±50ms
-    m.goodWindow = 0.10        ' ±100ms
+    ' Hit windows - adjust these to tune difficulty
+    m.perfectWindow = 0.08
+    m.greatWindow = 0.15
+    m.goodWindow = 0.25
+    m.missWindow = 0.35
     
-    ' Points per hit type
+    ' Score values per judgment
     m.perfectPoints = 300
+    m.greatPoints = 200
     m.goodPoints = 100
     m.missPoints = 0
     
@@ -43,6 +47,7 @@ sub init()
     m.combo = 0
     m.maxCombo = 0
     m.perfects = 0
+    m.greats = 0
     m.goods = 0
     m.misses = 0
     m.totalNotes = 0
@@ -53,30 +58,30 @@ sub init()
     m.songLength = 0
     m.audioPath = ""
     
-    ' SceneGraph Audio node for music
+    ' Audio playback via SceneGraph
     m.audioNode = CreateObject("roSGNode", "Audio")
     m.audioNode.observeField("state", "onAudioStateChange")
     
-    ' Main game loop at ~60fps
+    ' ~60fps game loop
     m.gameTimer = CreateObject("roSGNode", "Timer")
     m.gameTimer.repeat = true
     m.gameTimer.duration = 0.016
     m.gameTimer.observeField("fire", "onGameTick")
     
-    ' Pre-game countdown
+    ' Countdown before gameplay starts
     m.countdownTimer = CreateObject("roSGNode", "Timer")
     m.countdownTimer.repeat = true
     m.countdownTimer.duration = 1.0
     m.countdownTimer.observeField("fire", "onCountdownTick")
     m.countdownValue = 3
     
-    ' Clears "PERFECT/GOOD/MISS" text after a moment
+    ' Brief display of hit feedback text
     m.feedbackTimer = CreateObject("roSGNode", "Timer")
     m.feedbackTimer.repeat = false
     m.feedbackTimer.duration = 0.3
     m.feedbackTimer.observeField("fire", "clearFeedback")
     
-    ' Each lane gets its own timer to flash on keypress
+    ' Per-lane flash timers for keypress feedback
     m.receptorTimers = []
     for i = 0 to 3
         timer = CreateObject("roSGNode", "Timer")
@@ -103,12 +108,12 @@ sub initScreenDimensions()
         m.screenHeight = displaySize.h
     end if
     
-    ' Everything scales off 720p as the baseline
+    ' Scale factor relative to 720p baseline
     m.scaleFactor = m.screenHeight / 720.0
 end sub
 
 sub calculateLayout()
-    ' Lanes sit in the center ~42% of the screen
+    ' Lanes take up ~42% of screen width, centered
     m.laneAreaWidth = int(m.screenWidth * 0.42)
     m.laneAreaX = int((m.screenWidth - m.laneAreaWidth) / 2)
     
@@ -121,17 +126,17 @@ sub calculateLayout()
     m.noteWidth = int(m.laneWidth * 0.9)
     m.noteHeight = int(m.screenHeight * 0.038)
     
-    ' Where notes should be hit (86% down feels right)
+    ' Hit line at 86% down feels natural
     m.hitLineY = int(m.screenHeight * 0.86)
     
-    ' Receptors sit just above the hit line
+    ' Receptors sit just above hit line
     m.receptorHeight = int(m.screenHeight * 0.074)
     m.receptorY = int(m.hitLineY - m.receptorHeight)
     
-    ' How fast notes travel (tuned for 720p, scales up from there)
+    ' Note speed tuned for 720p, scales proportionally
     m.noteSpeed = int(m.screenHeight * 0.556)
     
-    ' Notes spawn above the visible area
+    ' Notes spawn offscreen above
     m.spawnY = int(-m.screenHeight * 0.046)
     
     m.progressY = int(m.hitLineY + (m.screenHeight * 0.02))
@@ -146,7 +151,7 @@ sub setupLayout()
     background.width = m.screenWidth
     background.height = m.screenHeight
     
-    ' Lane backdrop
+    ' Dark backdrop behind lanes
     laneBackdrop = m.top.findNode("laneBackdrop")
     laneBackdrop.translation = [m.laneAreaX, 0]
     laneBackdrop.width = m.laneAreaWidth
@@ -155,7 +160,7 @@ sub setupLayout()
     setupLaneDividers()
     setupReceptors()
     
-    ' Center the feedback text in the lane area
+    ' Center feedback text in lane area
     feedbackArea = m.top.findNode("feedbackArea")
     feedbackX = m.laneAreaX + (m.laneAreaWidth / 2)
     feedbackY = int(m.hitLineY - (m.screenHeight * 0.13))
@@ -199,11 +204,10 @@ sub setupReceptors()
     m.receptorBgs = []
     m.receptorArrows = []
     
-    ' Offset the arrow symbol so it's not at the very top
+    ' Nudge arrow down so it's not flush with top
     arrowOffsetY = int(m.receptorHeight * 0.15)
     
     for i = 0 to 3
-        ' Create receptor group
         receptorGroup = receptors.createChild("Group")
         xPos = m.lanePositions[i] + int((m.laneWidth - m.noteWidth) / 2)
         receptorGroup.translation = [xPos, 0]
@@ -259,13 +263,13 @@ sub setupHudRight()
     accuracyLabel.translation = [0, int(m.screenHeight * 0.038)]
     accuracyLabel.width = m.hudWidth
     
-    ' Hit count stats below accuracy
+    ' Hit breakdown below accuracy
     statsGroup = m.top.findNode("statsGroup")
     statsGroup.translation = [0, int(m.screenHeight * 0.12)]
     
-    rowHeight = int(m.screenHeight * 0.028)  ' Slightly more row height
-    labelWidth = int(m.hudWidth * 0.6)       ' Wider labels for full words
-    countOffset = int(m.hudWidth * 0.75)     ' Position for count numbers
+    rowHeight = int(m.screenHeight * 0.028)
+    labelWidth = int(m.hudWidth * 0.6)
+    countOffset = int(m.hudWidth * 0.75)
     
     perfectHeader = m.top.findNode("perfectHeader")
     perfectHeader.width = labelWidth
@@ -276,23 +280,33 @@ sub setupHudRight()
     perfectCount.width = int(m.hudWidth * 0.25)
     perfectCount.horizAlign = "right"
     
+    greatHeader = m.top.findNode("greatHeader")
+    greatHeader.translation = [0, rowHeight]
+    greatHeader.width = labelWidth
+    greatHeader.horizAlign = "right"
+    
+    greatCount = m.top.findNode("greatCount")
+    greatCount.translation = [countOffset, rowHeight]
+    greatCount.width = int(m.hudWidth * 0.25)
+    greatCount.horizAlign = "right"
+    
     goodHeader = m.top.findNode("goodHeader")
-    goodHeader.translation = [0, rowHeight]
+    goodHeader.translation = [0, rowHeight * 2]
     goodHeader.width = labelWidth
     goodHeader.horizAlign = "right"
     
     goodCount = m.top.findNode("goodCount")
-    goodCount.translation = [countOffset, rowHeight]
+    goodCount.translation = [countOffset, rowHeight * 2]
     goodCount.width = int(m.hudWidth * 0.25)
     goodCount.horizAlign = "right"
     
     missHeader = m.top.findNode("missHeader")
-    missHeader.translation = [0, rowHeight * 2]
+    missHeader.translation = [0, rowHeight * 3]
     missHeader.width = labelWidth
     missHeader.horizAlign = "right"
     
     missCount = m.top.findNode("missCount")
-    missCount.translation = [countOffset, rowHeight * 2]
+    missCount.translation = [countOffset, rowHeight * 3]
     missCount.width = int(m.hudWidth * 0.25)
     missCount.horizAlign = "right"
 end sub
@@ -396,7 +410,7 @@ sub loadBeatmap(beatmapPath as String)
     print "[Gameplay] Loaded "; m.totalNotes; " notes"
 end sub
 
-' Generates a simple test pattern when no real beatmap exists
+' Fallback test pattern when no beatmap is loaded
 sub createDemoNotes()
     m.beatmap = []
     noteTime = 2.0
@@ -444,6 +458,7 @@ sub startGameplay()
     m.score = 0
     m.combo = 0
     m.perfects = 0
+    m.greats = 0
     m.goods = 0
     m.misses = 0
     
@@ -506,7 +521,7 @@ sub onGameTick()
     checkSongEnd()
 end sub
 
-' Spawn notes early enough that they reach the hit line on time
+' Spawn notes with enough lead time to reach hit line
 sub spawnNotes()
     travelTime = (m.hitLineY - m.spawnY) / m.noteSpeed
     lookAheadTime = m.gameTime + travelTime
@@ -553,9 +568,10 @@ sub updateNotes()
     end for
 end sub
 
-' Mark notes as missed if they fall past the threshold
+' Auto-miss notes that fall too far past the hit line
 sub checkMissedNotes()
-    missThreshold = m.hitLineY + int(m.screenHeight * 0.14)
+    ' 20% past hit line = miss (forgiving threshold)
+    missThreshold = m.hitLineY + int(m.screenHeight * 0.20)
     
     i = 0
     while i < m.activeNotes.count()
@@ -576,7 +592,7 @@ sub checkMissedNotes()
     end while
 end sub
 
-' Find the closest note in this lane and see if we hit it
+' Check for closest hittable note in this lane
 sub pressLane(lane as Integer)
     if not m.isPlaying or m.isPaused then return
     
@@ -604,8 +620,15 @@ sub pressLane(lane as Integer)
         if closestTimeDiff <= m.perfectWindow
             registerPerfect(closestNote)
             removeNote(closestIndex)
+        else if closestTimeDiff <= m.greatWindow
+            registerGreat(closestNote)
+            removeNote(closestIndex)
         else if closestTimeDiff <= m.goodWindow
             registerGood(closestNote)
+            removeNote(closestIndex)
+        else if closestTimeDiff <= m.missWindow
+            ' Within range but bad timing - count as miss now instead of later
+            registerMiss(closestNote)
             removeNote(closestIndex)
         end if
     end if
@@ -621,6 +644,19 @@ sub registerPerfect(note as Object)
     m.perfects = m.perfects + 1
     
     showFeedback("PERFECT!", "0x6c5ce7FF")
+    updateHUD()
+end sub
+
+sub registerGreat(note as Object)
+    m.combo = m.combo + 1
+    if m.combo > m.maxCombo then m.maxCombo = m.combo
+    
+    comboMult = 1.0 + (m.combo * 0.01)
+    points = int(m.greatPoints * comboMult)
+    m.score = m.score + points
+    m.greats = m.greats + 1
+    
+    showFeedback("GREAT!", "0xfdcb6eFF")
     updateHUD()
 end sub
 
@@ -689,12 +725,14 @@ end sub
 sub updateHUD()
     m.scoreLabel.text = m.score.toStr()
     m.perfectCount.text = m.perfects.toStr()
+    m.greatCount.text = m.greats.toStr()
     m.goodCount.text = m.goods.toStr()
     m.missCount.text = m.misses.toStr()
     
-    totalHits = m.perfects + m.goods + m.misses
+    totalHits = m.perfects + m.greats + m.goods + m.misses
     if totalHits > 0
-        accuracy = ((m.perfects * 100.0) + (m.goods * 50.0)) / totalHits
+        ' Perfect=100%, Great=75%, Good=50%, Miss=0%
+        accuracy = ((m.perfects * 100.0) + (m.greats * 75.0) + (m.goods * 50.0)) / totalHits
         m.accuracyLabel.text = formatNumber(accuracy, 2) + "%"
     else
         m.accuracyLabel.text = "100.00%"
@@ -719,7 +757,7 @@ sub updateProgress()
 end sub
 
 sub checkSongEnd()
-    ' End when all notes are done or we've gone past the song length
+    ' Done when all notes cleared or past song duration
     if m.nextNoteIndex >= m.beatmap.count() and m.activeNotes.count() = 0
         endGame()
     else if m.gameTime > m.songLength + 2
@@ -735,7 +773,7 @@ sub endGame()
     
     stopAudio()
     
-    ' Clean up any notes still on screen
+    ' Cleanup any remaining notes
     for each note in m.activeNotes
         if note.node <> invalid
             note.node.getParent().removeChild(note.node)
@@ -754,6 +792,7 @@ sub endGame()
         score: m.score,
         grade: grade,
         perfects: m.perfects,
+        greats: m.greats,
         goods: m.goods,
         misses: m.misses,
         maxCombo: m.maxCombo,
@@ -777,9 +816,10 @@ function calculateGrade() as String
 end function
 
 function calculateAccuracy() as Float
-    totalHits = m.perfects + m.goods + m.misses
+    totalHits = m.perfects + m.greats + m.goods + m.misses
     if totalHits = 0 then return 100.0
-    return ((m.perfects * 100.0) + (m.goods * 50.0)) / totalHits
+    ' Perfect=100%, Great=75%, Good=50%, Miss=0%
+    return ((m.perfects * 100.0) + (m.greats * 75.0) + (m.goods * 50.0)) / totalHits
 end function
 
 sub saveHighScore(songId as String, newScore as Integer)
@@ -797,7 +837,6 @@ sub togglePause()
     m.isPaused = not m.isPaused
     m.pauseOverlay.visible = m.isPaused
     
-    ' Pause/resume audio
     if m.isPaused
         pauseAudio()
     else
