@@ -44,6 +44,39 @@
       "beatmapPath": "pkg:/assets/songs/beat_master/beatmap.json",
       "audioPath": "pkg:/assets/songs/beat_master/audio.mp3",
       "coverPath": "pkg:/assets/songs/beat_master/cover.png"
+    },
+    {
+      "id": "home_depot",
+      "title": "Home Depot",
+      "artist": "Home Depot",
+      "difficulty": "Normal",
+      "difficultyRating": 4,
+      "length": 31,
+      "beatmapPath": "pkg:/assets/songs/home_depot/beatmap.json",
+      "audioPath": "pkg:/assets/songs/home_depot/audio.mp3",
+      "coverPath": ""
+    },
+    {
+      "id": "flamewall",
+      "title": "Flamewall",
+      "artist": "Symphonic Speed Metal",
+      "difficulty": "Expert",
+      "difficultyRating": 7,
+      "length": 410,
+      "beatmapPath": "pkg:/assets/songs/flamewall/beatmap.json",
+      "audioPath": "pkg:/assets/songs/flamewall/audio.mp3",
+      "coverPath": ""
+    },
+    {
+      "id": "home_depot_expert",
+      "title": "Home Depot",
+      "artist": "Home Depot",
+      "difficulty": "Expert",
+      "difficultyRating": 7,
+      "length": 31,
+      "beatmapPath": "pkg:/assets/songs/home_depot_expert/beatmap.json",
+      "audioPath": "pkg:/assets/songs/home_depot_expert/audio.mp3",
+      "coverPath": ""
     }
   ]
 }

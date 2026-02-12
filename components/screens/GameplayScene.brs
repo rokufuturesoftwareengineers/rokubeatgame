@@ -134,7 +134,11 @@ sub calculateLayout()
     m.receptorY = int(m.hitLineY - m.receptorHeight)
     
     ' Note speed tuned for 720p, scales proportionally
-    m.noteSpeed = int(m.screenHeight * 0.556)
+    ' SPEED MULTIPLIER: Increase this value to make notes fall faster
+    ' Original: 0.556, Current: 1.0 (~1.8x faster)
+    ' Tweak range: 0.5 (slow) -> 0.7 (normal) -> 1.0 (fast) -> 1.2 (very fast)
+    m.noteSpeedMultiplier = 1.0
+    m.noteSpeed = int(m.screenHeight * m.noteSpeedMultiplier)
     
     ' Notes spawn offscreen above
     m.spawnY = int(-m.screenHeight * 0.046)

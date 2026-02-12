@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- GradeDisplay.xml - Grade letter display component (dynamically sized) -->
+<component name="GradeDisplay" extends="Group">
+    <interface>
+        <field id="grade" type="string" value="S" onChange="onGradeChanged" />
+        <field id="gradeColor" type="string" value="0xffeaa7FF" onChange="onGradeColorChanged" />
+        <field id="displaySize" type="integer" value="300" onChange="updateDimensions" />
+    </interface>
+
+    <script type="text/brightscript" uri="pkg:/components/ui/GradeDisplay.brs" />
+
+    <children>
+        <Group id="gradeContainer">
+            <Rectangle id="gradeBg" color="0x16213eFF" />
+            <Label id="gradeLabel" text="S" font="font:LargeBoldSystemFont" color="0xffeaa7FF" 
+                   horizAlign="center" vertAlign="center" />
+        </Group>
+    </children>
+</component>

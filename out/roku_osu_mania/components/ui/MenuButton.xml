@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- MenuButton.xml - Reusable button component (dynamically sized) -->
+<component name="MenuButton" extends="Group">
+    <interface>
+        <field id="label" type="string" onChange="onLabelChanged" />
+        <field id="primary" type="boolean" value="false" onChange="updateColors" />
+        <field id="selected" type="boolean" value="false" onChange="onSelectedChanged" />
+        <field id="buttonWidth" type="integer" value="350" onChange="updateDimensions" />
+        <field id="buttonHeight" type="integer" value="80" onChange="updateDimensions" />
+    </interface>
+
+    <script type="text/brightscript" uri="pkg:/components/ui/MenuButton.brs" />
+
+    <children>
+        <Group id="buttonContainer">
+            <Rectangle id="buttonBg" color="0x2d3436FF" />
+            <Label id="buttonLabel" text="" font="font:MediumBoldSystemFont" color="0xb2bec3FF" 
+                   horizAlign="center" vertAlign="center" />
+        </Group>
+    </children>
+</component>

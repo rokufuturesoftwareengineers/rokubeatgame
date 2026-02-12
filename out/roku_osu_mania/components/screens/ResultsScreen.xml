@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- ResultsScreen.xml - End game results display (dynamically scaled) -->
+<component name="ResultsScreen" extends="Group">
+    <interface>
+        <field id="result" type="assocarray" alwaysNotify="true" onChange="onResultSet" />
+        <field id="songInfo" type="assocarray" />
+        <field id="action" type="string" />
+    </interface>
+    
+    <script type="text/brightscript" uri="ResultsScreen.brs" />
+    
+    <children>
+        <!-- Background - sized dynamically -->
+        <Rectangle id="background" color="0x1a1a2eFF" />
+        
+        <!-- Decorative top bar -->
+        <Rectangle id="topBar" color="0xe94560FF" />
+        
+        <!-- Header -->
+        <Label id="headerLabel" text="RESULTS" font="font:LargeBoldSystemFont" color="0xFFFFFFFF" />
+        
+        <!-- Song info -->
+        <Group id="songInfoGroup">
+            <Label id="songTitle" text="Song Title" font="font:LargeBoldSystemFont" color="0xFFFFFFFF" />
+            <Label id="songArtist" text="Artist" font="font:MediumSystemFont" color="0x74b9ffFF" />
+        </Group>
+        
+        <!-- Grade display -->
+        <Group id="gradeGroup">
+            <Rectangle id="gradeBg" color="0x16213eFF" />
+            <Label id="gradeLabel" text="S" font="font:LargeBoldSystemFont" color="0xffeaa7FF" 
+                   horizAlign="center" vertAlign="center" />
+        </Group>
+        
+        <!-- Score panel -->
+        <Group id="scorePanel">
+            <!-- Main score -->
+            <Rectangle id="scoreBg" color="0x16213eFF" />
+            <Label id="scoreHeader" text="SCORE" font="font:MediumBoldSystemFont" color="0x636e72FF" />
+            <Label id="scoreValue" text="0" font="font:LargeBoldSystemFont" color="0xffeaa7FF" />
+            
+            <!-- Accuracy -->
+            <Group id="accuracyPanel">
+                <Rectangle id="accuracyBg" color="0x16213eFF" />
+                <Label id="accuracyHeader" text="ACCURACY" font="font:SmallBoldSystemFont" color="0x636e72FF" />
+                <Label id="accuracyValue" text="100.00%" font="font:MediumBoldSystemFont" color="0x00cec9FF" />
+            </Group>
+            
+            <!-- Max Combo -->
+            <Group id="comboPanel">
+                <Rectangle id="comboBg" color="0x16213eFF" />
+                <Label id="comboHeader" text="MAX COMBO" font="font:SmallBoldSystemFont" color="0x636e72FF" />
+                <Label id="maxComboValue" text="0" font="font:MediumBoldSystemFont" color="0xe17055FF" />
+            </Group>
+        </Group>
+        
+        <!-- Hit breakdown panel -->
+        <Group id="breakdownPanel">
+            <Rectangle id="breakdownBg" color="0x16213eFF" />
+            <Label id="breakdownHeader" text="HIT BREAKDOWN" font="font:MediumBoldSystemFont" color="0x636e72FF" />
+            
+            <!-- Perfect row -->
+            <Group id="perfectRow">
+                <Rectangle id="perfectBg" color="0x6c5ce7AA" />
+                <Label id="perfectLabel" text="PERFECT" font="font:SmallBoldSystemFont" color="0xFFFFFFFF" />
+                <Label id="perfectValue" text="0" font="font:SmallBoldSystemFont" color="0xFFFFFFFF" horizAlign="right" />
+            </Group>
+            
+            <!-- Great row -->
+            <Group id="greatRow">
+                <Rectangle id="greatBg" color="0xfdcb6eAA" />
+                <Label id="greatLabel" text="GREAT" font="font:SmallBoldSystemFont" color="0xFFFFFFFF" />
+                <Label id="greatValue" text="0" font="font:SmallBoldSystemFont" color="0xFFFFFFFF" horizAlign="right" />
+            </Group>
+            
+            <!-- Good row -->
+            <Group id="goodRow">
+                <Rectangle id="goodBg" color="0x00b894AA" />
+                <Label id="goodLabel" text="GOOD" font="font:SmallBoldSystemFont" color="0xFFFFFFFF" />
+                <Label id="goodValue" text="0" font="font:SmallBoldSystemFont" color="0xFFFFFFFF" horizAlign="right" />
+            </Group>
+            
+            <!-- Miss row -->
+            <Group id="missRow">
+                <Rectangle id="missBg" color="0xd63031AA" />
+                <Label id="missLabel" text="MISS" font="font:SmallBoldSystemFont" color="0xFFFFFFFF" />
+                <Label id="missValue" text="0" font="font:SmallBoldSystemFont" color="0xFFFFFFFF" horizAlign="right" />
+            </Group>
+        </Group>
+        
+        <!-- New high score indicator -->
+        <Label id="newHighScoreLabel" text="★ NEW HIGH SCORE! ★" font="font:MediumBoldSystemFont" 
+               color="0xffeaa7FF" horizAlign="center" visible="false" />
+        
+        <!-- Action buttons -->
+        <Group id="buttonsGroup">
+            <Group id="retryButton">
+                <Rectangle id="retryBg" color="0x6c5ce7FF" />
+                <Label id="retryLabel" text="Retry" font="font:MediumBoldSystemFont" color="0xFFFFFFFF" 
+                       horizAlign="center" vertAlign="center" />
+            </Group>
+            
+            <Group id="songSelectButton">
+                <Rectangle id="songSelectBg" color="0x2d3436FF" />
+                <Label id="songSelectLabel" text="Song Select" font="font:MediumBoldSystemFont" color="0xb2bec3FF" 
+                       horizAlign="center" vertAlign="center" />
+            </Group>
+            
+            <Group id="mainMenuButton">
+                <Rectangle id="mainMenuBg" color="0x2d3436FF" />
+                <Label id="mainMenuLabel" text="Main Menu" font="font:MediumBoldSystemFont" color="0xb2bec3FF" 
+                       horizAlign="center" vertAlign="center" />
+            </Group>
+        </Group>
+        
+        <!-- Instructions -->
+        <Label id="instructions" text="Use ← → to select  |  OK to confirm" font="font:SmallSystemFont" color="0x636e72FF" />
+        
+        <!-- Stats summary -->
+        <Label id="statsLabel" text="" font="font:SmallSystemFont" color="0x636e72FF" />
+    </children>
+</component>

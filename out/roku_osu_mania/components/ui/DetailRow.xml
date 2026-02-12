@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- DetailRow.xml - Label-value pair component (dynamically sized) -->
+<component name="DetailRow" extends="Group">
+    <interface>
+        <field id="label" type="string" onChange="onLabelChanged" />
+        <field id="value" type="string" onChange="onValueChanged" />
+        <field id="valueColor" type="string" value="0xFFFFFFFF" onChange="onValueColorChanged" />
+        <field id="rowWidth" type="integer" value="370" onChange="updateDimensions" />
+        <field id="labelWidth" type="integer" value="120" onChange="updateDimensions" />
+    </interface>
+
+    <script type="text/brightscript" uri="pkg:/components/ui/DetailRow.brs" />
+
+    <children>
+        <Group id="rowContainer">
+            <Label id="labelText" text="Label:" font="font:SmallSystemFont" color="0x636e72FF" />
+            <Label id="valueText" text="Value" font="font:SmallSystemFont" color="0xFFFFFFFF" horizAlign="right" />
+        </Group>
+    </children>
+</component>

@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!--
+    StartMenu.xml - Main menu (dynamically scaled and centered)
+    All positions set in BrightScript for device-agnostic layout
+-->
+<component name="StartMenu" extends="Group">
+    <script type="text/brightscript" uri="pkg:/components/screens/StartMenu.brs" />
+
+    <interface>
+        <field id="menuAction" type="string" alwaysNotify="true" />
+    </interface>
+
+    <children>
+        <!-- Background - sized dynamically -->
+        <Rectangle id="background" color="0x1a1a2eFF" />
+        
+        <!-- Title section with glow background -->
+        <Group id="titleGroup">
+            <Rectangle id="titleGlow" color="0x0f3460AA" />
+            <Label id="titleMain" text="Beat Game" font="font:LargeBoldSystemFont" 
+                   color="0xe94560FF" horizAlign="center" vertAlign="center" />
+        </Group>
+        
+        <!-- Decorative line -->
+        <Rectangle id="titleLine" color="0xe94560FF" />
+        
+        <!-- Menu buttons -->
+        <Group id="menuButtonsGroup">
+            <Group id="playBtn">
+                <Rectangle id="playBtnBg" color="0x6c5ce7FF" />
+                <Label id="playBtnLabel" text="▶  PLAY" font="font:MediumBoldSystemFont" 
+                       color="0xFFFFFFFF" horizAlign="center" vertAlign="center" />
+            </Group>
+            <Group id="helpBtn">
+                <Rectangle id="helpBtnBg" color="0x2d3436FF" />
+                <Label id="helpBtnLabel" text="?  HOW TO PLAY" font="font:MediumBoldSystemFont" 
+                       color="0xb2bec3FF" horizAlign="center" vertAlign="center" />
+            </Group>
+        </Group>
+        
+        <!-- Key hints section with background -->
+        <Group id="keyHintsGroup">
+            <Rectangle id="keyHintsBg" color="0x0f346066" />
+            <Label id="controlsLabel" text="Controls:" font="font:SmallBoldSystemFont" 
+                   color="0xFFFFFFFF" horizAlign="center" />
+            <Label id="lanesLabel" text="← Lane 1  |  ↑ Lane 2  |  ↓ Lane 3  |  → Lane 4" 
+                   font="font:SmallSystemFont" color="0xAAAAAAFF" horizAlign="center" />
+            <Label id="instructionLabel" text="Hit Notes In Time With The Music!" 
+                   font="font:SmallSystemFont" color="0x888888FF" horizAlign="center" />
+        </Group>
+        
+        <!-- Footer -->
+        <Label id="versionLabel" text="Press OK to select" font="font:SmallSystemFont" 
+               color="0x444444FF" horizAlign="center" />
+        
+        <!-- Animated decorative notes -->
+        <Label id="noteL" text="♪" font="font:LargeBoldSystemFont" color="0xe9456044" />
+        <Label id="noteR" text="♫" font="font:LargeBoldSystemFont" color="0xe9456044" />
+    </children>
+</component>

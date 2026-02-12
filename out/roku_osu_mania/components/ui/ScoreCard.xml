@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- ScoreCard.xml - Score display card component (dynamically sized) -->
+<component name="ScoreCard" extends="Group">
+    <interface>
+        <field id="label" type="string" onChange="onLabelChanged" />
+        <field id="value" type="string" onChange="onValueChanged" />
+        <field id="valueColor" type="string" value="0xffeaa7FF" onChange="onValueColorChanged" />
+        <field id="cardWidth" type="integer" value="290" onChange="updateDimensions" />
+        <field id="cardHeight" type="integer" value="100" onChange="updateDimensions" />
+    </interface>
+
+    <script type="text/brightscript" uri="pkg:/components/ui/ScoreCard.brs" />
+
+    <children>
+        <Group id="cardContainer">
+            <Rectangle id="cardBg" color="0x16213eFF" />
+            <Label id="labelText" text="LABEL" font="font:SmallBoldSystemFont" color="0x636e72FF" />
+            <Label id="valueText" text="0" font="font:MediumBoldSystemFont" color="0xffeaa7FF" />
+        </Group>
+    </children>
+</component>
