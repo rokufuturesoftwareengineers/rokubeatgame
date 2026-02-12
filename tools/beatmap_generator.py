@@ -358,24 +358,25 @@ def generate_beat_aligned_notes(y, sr, difficulty='normal', sensitivity='normal'
     # Difficulty controls subdivision depth and density
     # NOTE DENSITY: Increase max_nps values for more notes per second
     # Higher = more dense beatmaps, lower = sparser beatmaps
+    # SHIFTED: Easy = old Normal, Normal = near Expert, Hard = almost Expert
     difficulty_config = {
         'easy': {
-            'subdivision': 2,       # eighth notes
-            'max_nps': 5.0,         # notes per second cap
-            'snap_tolerance': 75,   # looser snap to catch more
-            'onset_weight': 0.3,
-        },
-        'normal': {
-            'subdivision': 4,       # sixteenth notes
-            'max_nps': 8.0,         # denser maps
+            'subdivision': 4,       # sixteenth notes (was old normal)
+            'max_nps': 8.0,         # old normal density
             'snap_tolerance': 65,
             'onset_weight': 0.5,
         },
+        'normal': {
+            'subdivision': 8,       # 32nd notes (near expert)
+            'max_nps': 14.0,        # just under expert's 16.0
+            'snap_tolerance': 52,   # tight snap, close to expert's 50
+            'onset_weight': 0.8,    # close to expert's 0.85
+        },
         'hard': {
-            'subdivision': 4,       # sixteenth notes
-            'max_nps': 11.0,
-            'snap_tolerance': 55,
-            'onset_weight': 0.7, 
+            'subdivision': 8,       # 32nd notes (same as expert)
+            'max_nps': 15.0,        # between normal and expert
+            'snap_tolerance': 50,   # same as expert
+            'onset_weight': 0.83,
         },
         'expert': {
             'subdivision': 8,       # 32nd notes
@@ -461,21 +462,22 @@ def assign_lanes(times, difficulty='normal', hit_classes=None):
     lane_count = 4
     
     # Tweak these to adjust how each difficulty feels
+    # SHIFTED: Easy = old Normal, Normal = near Expert, Hard = almost Expert
     difficulty_settings = {
         'easy': {
-            'min_gap': 0.4,
-            'double_chance': 0.05,
-            'pattern_variety': 0.3
+            'min_gap': 0.25,        # old normal spacing
+            'double_chance': 0.15,  # old normal doubles
+            'pattern_variety': 0.5  # old normal variety
         },
         'normal': {
-            'min_gap': 0.25,
-            'double_chance': 0.15,
-            'pattern_variety': 0.5
+            'min_gap': 0.12,        # tight spacing, close to expert's 0.1
+            'double_chance': 0.35,  # close to expert's 0.4
+            'pattern_variety': 0.85 # close to expert's 0.9
         },
         'hard': {
-            'min_gap': 0.15,
-            'double_chance': 0.25,
-            'pattern_variety': 0.7
+            'min_gap': 0.11,        # between normal and expert
+            'double_chance': 0.38,  # between normal and expert
+            'pattern_variety': 0.88
         },
         'expert': {
             'min_gap': 0.1,
@@ -554,13 +556,14 @@ def get_audio_duration(y, sr):
 
 def get_difficulty_rating(difficulty):
     """Star rating for UI display."""
+    # SHIFTED: Easy=4 (old normal), Normal=6, Hard=7, Expert=7
     ratings = {
-        'easy': 2,
-        'normal': 4,
-        'hard': 5,
+        'easy': 4,
+        'normal': 6,
+        'hard': 7,
         'expert': 7
     }
-    return ratings.get(difficulty, 4)
+    return ratings.get(difficulty, 6)
 
 
 def generate_beatmap(audio_path, difficulty='normal', bpm_override=None, offset=0, sensitivity='normal', use_beat_aligned=True):

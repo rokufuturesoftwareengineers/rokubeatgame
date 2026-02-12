@@ -13,44 +13,11 @@
       "coverPath": ""
     },
     {
-      "id": "demo_song",
-      "title": "Demo Beat",
-      "artist": "Demo Artist",
-      "difficulty": "Normal",
-      "difficultyRating": 3,
-      "length": 60,
-      "beatmapPath": "pkg:/assets/songs/demo_song/beatmap.json",
-      "audioPath": "pkg:/assets/songs/demo_song/audio.mp3",
-      "coverPath": "pkg:/assets/songs/demo_song/cover.png"
-    },
-    {
-      "id": "rhythm_test",
-      "title": "Demo Beat",
-      "artist": "Demo Artist",
-      "difficulty": "Easy",
-      "difficultyRating": 2,
-      "length": 45,
-      "beatmapPath": "pkg:/assets/songs/rhythm_test/beatmap.json",
-      "audioPath": "pkg:/assets/songs/rhythm_test/audio.mp3",
-      "coverPath": "pkg:/assets/songs/rhythm_test/cover.png"
-    },
-    {
-      "id": "beat_master",
-      "title": "Demo Beat",
-      "artist": "Demo Artist",
-      "difficulty": "Hard",
-      "difficultyRating": 5,
-      "length": 90,
-      "beatmapPath": "pkg:/assets/songs/beat_master/beatmap.json",
-      "audioPath": "pkg:/assets/songs/beat_master/audio.mp3",
-      "coverPath": "pkg:/assets/songs/beat_master/cover.png"
-    },
-    {
       "id": "home_depot",
       "title": "Home Depot",
       "artist": "Home Depot",
       "difficulty": "Normal",
-      "difficultyRating": 4,
+      "difficultyRating": 6,
       "length": 31,
       "beatmapPath": "pkg:/assets/songs/home_depot/beatmap.json",
       "audioPath": "pkg:/assets/songs/home_depot/audio.mp3",
