@@ -81,6 +81,13 @@
                 <Label id="playBtnLabel" text="▶  PLAY" font="font:SmallBoldSystemFont" 
                        color="0xFFFFFFFF" horizAlign="center" vertAlign="center" />
             </Group>
+
+            <!-- QR Code - Phone Remote -->
+            <Group id="qrSection">
+                <Label id="qrLabel" text="Scan to play on phone" font="font:SmallestSystemFont"
+                       color="0x636e72FF" horizAlign="center" />
+                <Poster id="qrImage" uri="pkg:/images/qr_remote.png" />
+            </Group>
         </Group>
 
         <!-- Footer instructions -->

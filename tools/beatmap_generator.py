@@ -555,15 +555,16 @@ def get_audio_duration(y, sr):
 
 
 def get_difficulty_rating(difficulty):
-    """Star rating for UI display."""
-    # SHIFTED: Easy=4 (old normal), Normal=6, Hard=7, Expert=7
-    ratings = {
-        'easy': 4,
-        'normal': 6,
-        'hard': 7,
-        'expert': 7
+    """Star rating for UI display. Randomly selects from the difficulty's star range."""
+    # Easy: 1-2, Normal: 3-4, Hard: 5-6, Expert: 7
+    rating_ranges = {
+        'easy': [1, 2],
+        'normal': [3, 4],
+        'hard': [5, 6],
+        'expert': [7]
     }
-    return ratings.get(difficulty, 6)
+    stars = rating_ranges.get(difficulty, [3, 4])
+    return int(np.random.choice(stars))
 
 
 def generate_beatmap(audio_path, difficulty='normal', bpm_override=None, offset=0, sensitivity='normal', use_beat_aligned=True):

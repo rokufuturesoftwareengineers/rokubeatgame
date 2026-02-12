@@ -131,6 +131,11 @@ sub setupReferences()
     
     m.instructions = m.top.findNode("instructions")
     m.noSongsLabel = m.top.findNode("noSongsLabel")
+    
+    ' QR code section references
+    m.qrSection = m.top.findNode("qrSection")
+    m.qrLabel = m.top.findNode("qrLabel")
+    m.qrImage = m.top.findNode("qrImage")
 end sub
 
 sub setupLayout()
@@ -221,6 +226,18 @@ sub setupDetailsPanel()
     m.playBtnLabel.width = m.playBtnWidth
     m.playBtnLabel.height = m.playBtnHeight
     m.playBtnLabel.translation = [0, 0]
+    
+    ' QR code section below play button
+    currentY = currentY + m.playBtnHeight + m.paddingMed
+    qrSize = int(100 * m.scaleFactor)
+    qrCenterX = int((m.detailsPanelWidth - qrSize) / 2)
+    
+    m.qrSection.translation = [0, currentY]
+    m.qrLabel.width = m.detailsPanelWidth
+    m.qrLabel.translation = [0, 0]
+    m.qrImage.width = qrSize
+    m.qrImage.height = qrSize
+    m.qrImage.translation = [qrCenterX, int(18 * m.scaleFactor)]
 end sub
 
 sub setupMetadataRow(rowGroup as object, labelNode as object, valueNode as object, yPos as integer, rowWidth as integer)

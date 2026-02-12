@@ -17,7 +17,7 @@
       "title": "Home Depot",
       "artist": "Home Depot",
       "difficulty": "Normal",
-      "difficultyRating": 6,
+      "difficultyRating": 4,
       "length": 31,
       "beatmapPath": "pkg:/assets/songs/home_depot/beatmap.json",
       "audioPath": "pkg:/assets/songs/home_depot/audio.mp3",
