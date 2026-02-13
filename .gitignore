@@ -1,3 +1,4 @@
 Archive*.zip
 .vite/
 .DS_Store
+out/
