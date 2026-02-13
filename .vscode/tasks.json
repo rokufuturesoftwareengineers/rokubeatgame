@@ -2,6 +2,22 @@
     "version": "2.0.0",
     "tasks": [
         {
+            "label": "Regenerate QR Code",
+            "type": "shell",
+            "command": "python3",
+            "args": [
+                "-c",
+                "import qrcode; ip=__import__('subprocess').check_output(['ipconfig','getifaddr','en0']).decode().strip(); url=f'http://{ip}:8081/'; qrcode.make(url,box_size=8,border=2).save('${workspaceFolder}/images/qr_remote.png'); print(f'✅ QR code: {url}')"
+            ],
+            "problemMatcher": [],
+            "presentation": {
+                "echo": true,
+                "reveal": "silent",
+                "focus": false,
+                "panel": "shared"
+            }
+        },
+        {
             "label": "Package Roku App",
             "type": "shell",
             "command": "zip",
@@ -23,6 +39,7 @@
             "options": {
                 "cwd": "${workspaceFolder}"
             },
+            "dependsOn": ["Regenerate QR Code"],
             "problemMatcher": [],
             "group": {
                 "kind": "build",
@@ -94,6 +111,19 @@
                 "reveal": "always",
                 "focus": true,
                 "panel": "new"
+            }
+        },
+        {
+            "label": "Start Phone Remote",
+            "type": "shell",
+            "command": "${workspaceFolder}/tools/start-remote.sh",
+            "problemMatcher": [],
+            "isBackground": true,
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": true,
+                "panel": "dedicated"
             }
         }
     ],
