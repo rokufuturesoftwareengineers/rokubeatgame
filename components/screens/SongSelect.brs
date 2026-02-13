@@ -231,13 +231,19 @@ sub setupDetailsPanel()
     currentY = currentY + m.playBtnHeight + m.paddingMed
     qrSize = int(100 * m.scaleFactor)
     qrCenterX = int((m.detailsPanelWidth - qrSize) / 2)
-    
+
+    ' Label at top of QR section
+    labelHeight = int(18 * m.scaleFactor)
     m.qrSection.translation = [0, currentY]
     m.qrLabel.width = m.detailsPanelWidth
     m.qrLabel.translation = [0, 0]
+
+    ' Center QR image between label bottom and panel bottom
+    spaceBelow = m.detailsPanelHeight - currentY - labelHeight
+    qrOffsetY = labelHeight + int((spaceBelow - qrSize) / 2)
     m.qrImage.width = qrSize
     m.qrImage.height = qrSize
-    m.qrImage.translation = [qrCenterX, int(18 * m.scaleFactor)]
+    m.qrImage.translation = [qrCenterX, qrOffsetY]
 end sub
 
 sub setupMetadataRow(rowGroup as object, labelNode as object, valueNode as object, yPos as integer, rowWidth as integer)
