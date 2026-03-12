@@ -137,7 +137,7 @@ sub calculateLayout()
     ' SPEED MULTIPLIER: Increase this value to make notes fall faster
     ' Original: 0.556, Current: 1.0 (~1.8x faster)
     ' Tweak range: 0.5 (slow) -> 0.7 (normal) -> 1.0 (fast) -> 1.2 (very fast)
-    m.noteSpeedMultiplier = 1.0
+    m.noteSpeedMultiplier = 0.7
     m.noteSpeed = int(m.screenHeight * m.noteSpeedMultiplier)
     
     ' Notes spawn offscreen above

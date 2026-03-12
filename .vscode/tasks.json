@@ -6,8 +6,7 @@
             "type": "shell",
             "command": "python3",
             "args": [
-                "-c",
-                "import qrcode; ip=__import__('subprocess').check_output(['ipconfig','getifaddr','en0']).decode().strip(); url=f'http://{ip}:8081/'; qrcode.make(url,box_size=8,border=2).save('${workspaceFolder}/images/qr_remote.png'); print(f'✅ QR code: {url}')"
+                "${workspaceFolder}/tools/generate_qr.py"
             ],
             "problemMatcher": [],
             "presentation": {
