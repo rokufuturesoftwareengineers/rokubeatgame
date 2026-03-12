@@ -51,8 +51,12 @@ sub calculateLayout()
     m.listPanelHeight = m.screenHeight - m.listPanelY - int(32 * m.scaleFactor)
 
     m.thumbSize = int(90 * m.scaleFactor)
-    m.cardHeight = int(130 * m.scaleFactor)
-    m.cardGap = int(6 * m.scaleFactor)
+    m.titleBarH = int(30 * m.scaleFactor)
+    m.pinkBarH = int(28 * m.scaleFactor)
+    m.starsBarH = int(28 * m.scaleFactor)
+    m.metaBarH = int(22 * m.scaleFactor)
+    m.cardHeight = m.titleBarH + m.pinkBarH + m.starsBarH + m.metaBarH
+    m.cardGap = int(4 * m.scaleFactor)
     m.cardPadX = int(8 * m.scaleFactor)
     m.cardWidth = m.listPanelWidth - (m.cardPadX * 2)
     m.visibleItems = int(m.listPanelHeight / (m.cardHeight + m.cardGap))
@@ -343,6 +347,7 @@ sub buildSongList()
 
     yPos = 0
     sf = m.scaleFactor
+    arrowW = int(16 * sf)
 
     for i = 0 to m.songs.count() - 1
         song = m.songs[i]
@@ -350,110 +355,118 @@ sub buildSongList()
         item = m.songListContainer.createChild("Group")
         item.translation = [0, yPos]
 
-        cardBg = item.createChild("Rectangle")
-        cardBg.width = m.cardWidth
-        cardBg.height = m.cardHeight
-        cardBg.color = m.cardBg
-
-        accentBar = item.createChild("Rectangle")
-        accentBar.width = m.cardWidth
-        accentBar.height = int(3 * sf)
-        if accentBar.height < 2 then accentBar.height = 2
-        accentBar.translation = [0, m.cardHeight - accentBar.height]
-        accentBar.color = "0x44444400"
-
-        thumbBg = item.createChild("Rectangle")
-        thumbBg.width = m.thumbSize
-        thumbBg.height = m.thumbSize
-        thumbBg.translation = [int(8 * sf), int((m.cardHeight - m.thumbSize) / 2)]
-        thumbBg.color = "0x333333FF"
-
-        thumbIcon = item.createChild("Label")
-        thumbIcon.width = m.thumbSize
-        thumbIcon.height = m.thumbSize
-        thumbIcon.translation = [int(8 * sf), int((m.cardHeight - m.thumbSize) / 2)]
-        thumbIcon.text = "♪"
-        thumbIcon.font = "font:MediumBoldSystemFont"
-        thumbIcon.color = "0xFF149944"
-        thumbIcon.horizAlign = "center"
-        thumbIcon.vertAlign = "center"
-
-        textX = int(8 * sf) + m.thumbSize + int(12 * sf)
-        textW = m.cardWidth - textX - int(10 * sf)
+        titleBg = item.createChild("Rectangle")
+        titleBg.width = m.cardWidth
+        titleBg.height = m.titleBarH
+        titleBg.color = m.cardBg
+        titleBg.translation = [0, 0]
 
         titleLabel = item.createChild("Label")
-        titleLabel.translation = [textX, int(8 * sf)]
+        titleLabel.translation = [int(12 * sf), int(6 * sf)]
         titleLabel.text = ucase(song.title)
         titleLabel.font = "font:SmallBoldSystemFont"
         titleLabel.color = "0xFFFFFFFF"
-        titleLabel.width = textW
+        titleLabel.width = m.cardWidth - int(24 * sf)
         titleLabel.maxLines = 1
 
-        infoBarY = int(8 * sf) + int(24 * sf)
-        infoBarH = int(22 * sf)
+        pinkY = m.titleBarH
+        pinkBodyW = m.cardWidth - arrowW
 
-        diffInfoBg = item.createChild("Rectangle")
-        diffInfoBg.width = textW
-        diffInfoBg.height = infoBarH
-        diffInfoBg.translation = [textX, infoBarY]
-        diffInfoBg.color = m.accentPink
+        pinkBar = item.createChild("Rectangle")
+        pinkBar.width = pinkBodyW
+        pinkBar.height = m.pinkBarH
+        pinkBar.translation = [0, pinkY]
+        pinkBar.color = m.accentPink
+
+        arrowTop = item.createChild("Rectangle")
+        arrowTop.width = arrowW
+        arrowTop.height = int(m.pinkBarH / 2)
+        arrowTop.translation = [pinkBodyW, pinkY]
+        arrowTop.color = m.accentPink
+        arrowTop.rotation = 0.0
+
+        arrowBot = item.createChild("Rectangle")
+        arrowBot.width = arrowW
+        arrowBot.height = int(m.pinkBarH / 2)
+        arrowBot.translation = [pinkBodyW, pinkY + int(m.pinkBarH / 2)]
+        arrowBot.color = m.accentPink
+        arrowBot.rotation = 0.0
+
+        arrowTip = item.createChild("Rectangle")
+        arrowTip.width = arrowW
+        arrowTip.height = m.pinkBarH
+        arrowTip.translation = [pinkBodyW, pinkY]
+        arrowTip.color = m.accentPink
 
         diffTag = item.createChild("Label")
-        diffTag.translation = [textX + int(6 * sf), infoBarY + int(3 * sf)]
+        diffTag.translation = [int(12 * sf), pinkY + int(5 * sf)]
         diffTag.text = "DIFFICULTY"
-        diffTag.font = "font:SmallestBoldSystemFont"
+        diffTag.font = "font:SmallBoldSystemFont"
         diffTag.color = "0xFFFFFFDD"
-        diffTag.width = int(80 * sf)
+        diffTag.width = int(110 * sf)
 
         diffNum = item.createChild("Label")
-        diffNum.translation = [textX + int(88 * sf), infoBarY + int(3 * sf)]
+        diffNum.translation = [int(125 * sf), pinkY + int(5 * sf)]
         diffNum.text = song.difficultyRating.toStr()
-        diffNum.font = "font:SmallestBoldSystemFont"
+        diffNum.font = "font:SmallBoldSystemFont"
         diffNum.color = "0xFFFFFFFF"
-        diffNum.width = int(30 * sf)
+        diffNum.width = int(40 * sf)
 
         artistTag = item.createChild("Label")
-        artistTag.translation = [textX + int(130 * sf), infoBarY + int(3 * sf)]
+        artistTag.translation = [int(175 * sf), pinkY + int(5 * sf)]
         artistTag.text = "ARTIST"
-        artistTag.font = "font:SmallestBoldSystemFont"
+        artistTag.font = "font:SmallBoldSystemFont"
         artistTag.color = "0xFFFFFFDD"
-        artistTag.width = int(55 * sf)
+        artistTag.width = int(70 * sf)
 
         artistVal = item.createChild("Label")
-        artistVal.translation = [textX + int(185 * sf), infoBarY + int(3 * sf)]
+        artistVal.translation = [int(250 * sf), pinkY + int(5 * sf)]
         artistVal.text = ucase(song.artist)
-        artistVal.font = "font:SmallestBoldSystemFont"
+        artistVal.font = "font:SmallBoldSystemFont"
         artistVal.color = "0xFFFFFFFF"
-        artistVal.width = textW - int(185 * sf)
+        artistVal.width = pinkBodyW - int(260 * sf)
         artistVal.maxLines = 1
 
-        starsY = infoBarY + infoBarH + int(6 * sf)
+        starsY = pinkY + m.pinkBarH
+        starsBg = item.createChild("Rectangle")
+        starsBg.width = m.cardWidth
+        starsBg.height = m.starsBarH
+        starsBg.translation = [0, starsY]
+        starsBg.color = "0xF0F0F0FF"
 
         starsLabel = item.createChild("Label")
-        starsLabel.translation = [textX, starsY]
+        starsLabel.translation = [int(m.cardWidth / 2) - int(80 * sf), starsY + int(4 * sf)]
         starsLabel.text = getDifficultyStars(song.difficultyRating)
         starsLabel.font = "font:SmallSystemFont"
         starsLabel.color = m.starColorActive
-        starsLabel.width = textW
+        starsLabel.width = int(160 * sf)
+        starsLabel.horizAlign = "center"
+
+        metaY = starsY + m.starsBarH
+        metaBg = item.createChild("Rectangle")
+        metaBg.width = m.cardWidth
+        metaBg.height = m.metaBarH
+        metaBg.translation = [0, metaY]
+        metaBg.color = "0x1a1a1aDD"
 
         durLabel = item.createChild("Label")
-        durLabel.translation = [textX, starsY + int(18 * sf)]
+        durLabel.translation = [int(12 * sf), metaY + int(3 * sf)]
         durLabel.text = formatDuration(song.length)
         durLabel.font = "font:SmallestSystemFont"
-        durLabel.color = "0x888888FF"
-        durLabel.width = textW
+        durLabel.color = "0x999999FF"
+        durLabel.width = int(60 * sf)
 
         diffLabel = item.createChild("Label")
-        diffLabel.translation = [textX + int(60 * sf), starsY + int(18 * sf)]
+        diffLabel.translation = [int(75 * sf), metaY + int(3 * sf)]
         diffLabel.text = song.difficulty
         diffLabel.font = "font:SmallestBoldSystemFont"
         diffLabel.color = m.accentPink
-        diffLabel.width = textW - int(60 * sf)
+        diffLabel.width = m.cardWidth - int(85 * sf)
 
         m.songItems.push(item)
-        m.songItemBgs.push(cardBg)
+        m.songItemBgs.push(titleBg)
         m.songItemTitles.push(titleLabel)
-        m.songItemAccents.push(accentBar)
+        m.songItemAccents.push(pinkBar)
 
         yPos = yPos + m.cardHeight + m.cardGap
     end for
@@ -486,18 +499,18 @@ end function
 
 sub updateSelection()
     for i = 0 to m.songItemBgs.count() - 1
-        cardBg = m.songItemBgs[i]
+        titleBg = m.songItemBgs[i]
         titleLabel = m.songItemTitles[i]
-        accentBar = m.songItemAccents[i]
+        pinkBar = m.songItemAccents[i]
 
         if i = m.selectedIndex
-            cardBg.color = m.cardBgSelected
+            titleBg.color = "0x2a2a2aFF"
             titleLabel.color = m.selectedTextColor
-            accentBar.color = m.accentPink
+            pinkBar.color = m.accentPink
         else
-            cardBg.color = m.cardBg
+            titleBg.color = m.cardBg
             titleLabel.color = m.unselectedTextColor
-            accentBar.color = "0x44444400"
+            pinkBar.color = m.accentPinkDark
         end if
     end for
 
