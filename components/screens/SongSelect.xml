@@ -9,95 +9,95 @@
     </interface>
 
     <children>
-        <Rectangle id="bgBase" color="0x0a1628FF" />
-        <Rectangle id="bgGradientTop" color="0x0d2137CC" />
-        <Rectangle id="bgGradientBottom" color="0x162d50AA" />
+        <Rectangle id="bgBase" color="0xB0B0B0FF" />
 
-        <Group id="sphereLayer">
-            <Rectangle id="sphere1" color="0x2196F330" />
-            <Rectangle id="sphere2" color="0x1565C025" />
-            <Rectangle id="sphere3" color="0x42A5F520" />
-            <Rectangle id="sphere4" color="0x0D47A128" />
-            <Rectangle id="sphere5" color="0x1E88E518" />
-        </Group>
+        <Rectangle id="geoPoly1" color="0xC8C8C8FF" />
+        <Rectangle id="geoPoly2" color="0x9E9E9EFF" />
+        <Rectangle id="geoPoly3" color="0xBDBDBDFF" />
+        <Rectangle id="geoPoly4" color="0xA8A8A8FF" />
+        <Rectangle id="geoPoly5" color="0xD0D0D0FF" />
+        <Rectangle id="geoPoly6" color="0x959595FF" />
+        <Rectangle id="geoPoly7" color="0xC0C0C0FF" />
+        <Rectangle id="geoPoly8" color="0xAAAAAA80" />
 
         <Group id="headerGroup">
-            <Rectangle id="headerBg" color="0x0a162880" />
-            <Rectangle id="headerBorder" color="0x4FC3F720" />
-            <Label id="headerTitle" text="SELECT A SONG" font="font:MediumBoldSystemFont"
-                   color="0xE3F2FDDD" horizAlign="center" />
+            <Rectangle id="headerBg" color="0x1a1a1aEE" />
+            <Rectangle id="headerAccent" color="0xFF1493FF" />
+            <Label id="headerTitle" text="SONG SELECT" font="font:MediumBoldSystemFont"
+                   color="0xFFFFFFFF" horizAlign="left" />
         </Group>
 
         <Group id="listPanel">
-            <Rectangle id="listPanelBg" color="0xFFFFFF0A" />
-            <Rectangle id="listPanelBorderTop" color="0xFFFFFF18" />
-            <Rectangle id="listPanelBorderLeft" color="0xFFFFFF18" />
-            <Rectangle id="listPanelBorderRight" color="0xFFFFFF08" />
-            <Rectangle id="listPanelBorderBottom" color="0xFFFFFF08" />
-
             <Group id="songListContainer" />
 
             <Label id="scrollUpIndicator" text="▲" font="font:SmallBoldSystemFont"
-                   color="0x4FC3F766" horizAlign="center" visible="false" />
+                   color="0xFF149388" horizAlign="center" visible="false" />
             <Label id="scrollDownIndicator" text="▼" font="font:SmallBoldSystemFont"
-                   color="0x4FC3F766" horizAlign="center" visible="false" />
+                   color="0xFF149388" horizAlign="center" visible="false" />
         </Group>
 
         <Group id="detailsPanel">
-            <Rectangle id="detailsPanelBg" color="0xFFFFFF0A" />
-            <Rectangle id="detailsPanelBorderTop" color="0xFFFFFF18" />
-            <Rectangle id="detailsPanelBorderLeft" color="0xFFFFFF18" />
-            <Rectangle id="detailsPanelBorderRight" color="0xFFFFFF08" />
-            <Rectangle id="detailsPanelBorderBottom" color="0xFFFFFF08" />
+            <Rectangle id="detailsPanelBg" color="0x1a1a1aCC" />
+            <Rectangle id="detailsPanelBorderLeft" color="0xFF1493FF" />
 
             <Group id="artworkGroup">
-                <Rectangle id="artworkBg" color="0x1565C0FF" />
-                <Rectangle id="artworkOverlay" color="0xFFFFFF08" />
-                <Label id="artworkPlaceholder" text="♪" font="font:MediumBoldSystemFont"
-                       color="0xFFFFFF44" horizAlign="center" vertAlign="center" />
+                <Rectangle id="artworkBg" color="0x2a2a2aFF" />
+                <Label id="artworkPlaceholder" text="♪" font="font:LargeBoldSystemFont"
+                       color="0xFF149966" horizAlign="center" vertAlign="center" />
             </Group>
 
-            <Label id="detailTitle" text="Song Title" font="font:MediumBoldSystemFont"
-                   color="0xFFFFFFEE" horizAlign="center" />
+            <Label id="detailTitle" text="SONG TITLE" font="font:LargeBoldSystemFont"
+                   color="0xFFFFFFFF" />
 
             <Label id="detailArtist" text="Artist" font="font:SmallSystemFont"
-                   color="0xBBDEFBCC" horizAlign="center" />
+                   color="0xAAAAAAFF" />
 
-            <Group id="difficultyRow">
-                <Label id="difficultyLabel" text="Difficulty:" font="font:SmallSystemFont" color="0x90CAF9AA" />
-                <Label id="difficultyValue" text="★★★☆☆" font="font:SmallSystemFont" color="0x4FC3F7FF" horizAlign="right" />
-            </Group>
-
-            <Group id="durationRow">
-                <Label id="durationLabel" text="Duration:" font="font:SmallSystemFont" color="0x90CAF9AA" />
-                <Label id="durationValue" text="0:00" font="font:SmallSystemFont" color="0xE3F2FDDD" horizAlign="right" />
+            <Group id="diffBadge">
+                <Rectangle id="diffBadgeBg" color="0x2a2a2aFF" />
+                <Rectangle id="diffBadgeBorder" color="0xFF6B35FF" />
+                <Label id="diffBadgeLabel" text="DIFFICULTY" font="font:SmallestBoldSystemFont"
+                       color="0xFFFFFFCC" horizAlign="center" vertAlign="center" />
+                <Label id="diffBadgeValue" text="0" font="font:LargeBoldSystemFont"
+                       color="0xFFFFFFFF" horizAlign="center" vertAlign="center" />
             </Group>
 
             <Group id="bestScoreRow">
-                <Label id="bestScoreLabel" text="Best Score:" font="font:SmallSystemFont" color="0x90CAF9AA" />
-                <Label id="bestScoreValue" text="---" font="font:SmallSystemFont" color="0x4FC3F7FF" horizAlign="right" />
+                <Rectangle id="bestScoreBg" color="0x2a2a2aCC" />
+                <Label id="bestScoreLabel" text="BEST SCORE" font="font:SmallestBoldSystemFont" color="0xAAAAAAFF" horizAlign="center" />
+                <Label id="bestScoreValue" text="---" font="font:MediumBoldSystemFont" color="0xFF1493FF" horizAlign="center" />
+            </Group>
+
+            <Group id="durationRow">
+                <Rectangle id="durationBg" color="0x2a2a2aCC" />
+                <Label id="durationLabel" text="DURATION" font="font:SmallestBoldSystemFont" color="0xAAAAAAFF" horizAlign="center" />
+                <Label id="durationValue" text="0:00" font="font:MediumBoldSystemFont" color="0xFFFFFFFF" horizAlign="center" />
+            </Group>
+
+            <Group id="difficultyRow">
+                <Label id="difficultyLabel" text="" font="font:SmallSystemFont" color="0x888888FF" />
+                <Label id="difficultyValue" text="" font="font:SmallSystemFont" color="0xFF1493FF" />
             </Group>
 
             <Group id="playButton">
-                <Rectangle id="playBtnBg" color="0x1E88E5CC" />
-                <Rectangle id="playBtnBorder" color="0x4FC3F730" />
-                <Label id="playBtnLabel" text="▶  PLAY" font="font:SmallBoldSystemFont"
-                       color="0xFFFFFFEE" horizAlign="center" vertAlign="center" />
+                <Rectangle id="playBtnBg" color="0xFF1493FF" />
+                <Rectangle id="playBtnHighlight" color="0xFF69B4AA" />
+                <Label id="playBtnLabel" text="▶  PLAY" font="font:MediumBoldSystemFont"
+                       color="0xFFFFFFFF" horizAlign="center" vertAlign="center" />
             </Group>
 
             <Group id="qrSection">
                 <Label id="qrLabel" text="Scan to play on phone" font="font:SmallestSystemFont"
-                       color="0x90CAF966" horizAlign="center" />
+                       color="0x888888FF" horizAlign="center" />
                 <Poster id="qrImage" uri="pkg:/images/qr_remote.png" />
             </Group>
         </Group>
 
         <Label id="instructions" text="↑↓ Navigate   |   OK Play   |   ← Back"
-               font="font:SmallSystemFont" color="0x90CAF955" horizAlign="center" />
+               font="font:SmallSystemFont" color="0x888888CC" horizAlign="center" />
 
         <Label id="noSongsLabel" text="No songs available
 
 Add songs to assets/songs/ folder"
-               font="font:SmallSystemFont" color="0x90CAF9AA" horizAlign="center" visible="false" />
+               font="font:SmallSystemFont" color="0xAAAAAAFF" horizAlign="center" visible="false" />
     </children>
 </component>
