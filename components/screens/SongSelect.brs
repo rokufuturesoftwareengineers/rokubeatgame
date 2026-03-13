@@ -347,7 +347,7 @@ sub buildSongList()
 
     yPos = 0
     sf = m.scaleFactor
-    arrowW = int(16 * sf)
+    arrowDepth = int(m.pinkBarH * 0.5)
 
     for i = 0 to m.songs.count() - 1
         song = m.songs[i]
@@ -370,66 +370,69 @@ sub buildSongList()
         titleLabel.maxLines = 1
 
         pinkY = m.titleBarH
-        pinkBodyW = m.cardWidth - arrowW
 
         pinkBar = item.createChild("Rectangle")
-        pinkBar.width = pinkBodyW
+        pinkBar.width = m.cardWidth
         pinkBar.height = m.pinkBarH
         pinkBar.translation = [0, pinkY]
         pinkBar.color = m.accentPink
 
-        arrowTop = item.createChild("Rectangle")
-        arrowTop.width = arrowW
-        arrowTop.height = int(m.pinkBarH / 2)
-        arrowTop.translation = [pinkBodyW, pinkY]
-        arrowTop.color = m.accentPink
-        arrowTop.rotation = 0.0
+        arrowDepth = int(m.pinkBarH * 0.5)
+        halfBarH = int(m.pinkBarH / 2)
+        sliceCount = 7
+        sliceH = int(halfBarH / sliceCount)
+        if sliceH < 1 then sliceH = 1
 
-        arrowBot = item.createChild("Rectangle")
-        arrowBot.width = arrowW
-        arrowBot.height = int(m.pinkBarH / 2)
-        arrowBot.translation = [pinkBodyW, pinkY + int(m.pinkBarH / 2)]
-        arrowBot.color = m.accentPink
-        arrowBot.rotation = 0.0
+        for s = 0 to sliceCount - 1
+            cutW = int(arrowDepth * (sliceCount - s) / sliceCount)
+            slice = item.createChild("Rectangle")
+            slice.width = cutW
+            slice.height = sliceH + 1
+            slice.color = m.cardBg
+            slice.translation = [m.cardWidth - cutW, pinkY + s * sliceH]
+        end for
 
-        arrowTip = item.createChild("Rectangle")
-        arrowTip.width = arrowW
-        arrowTip.height = m.pinkBarH
-        arrowTip.translation = [pinkBodyW, pinkY]
-        arrowTip.color = m.accentPink
+        for s = 0 to sliceCount - 1
+            cutW = int(arrowDepth * (s + 1) / sliceCount)
+            slice = item.createChild("Rectangle")
+            slice.width = cutW
+            slice.height = sliceH + 1
+            slice.color = "0xF0F0F0FF"
+            slice.translation = [m.cardWidth - cutW, pinkY + halfBarH + s * sliceH]
+        end for
 
         diffTag = item.createChild("Label")
-        diffTag.translation = [int(12 * sf), pinkY + int(5 * sf)]
+        diffTag.translation = [int(10 * sf), pinkY + int(5 * sf)]
         diffTag.text = "DIFFICULTY"
-        diffTag.font = "font:SmallBoldSystemFont"
+        diffTag.font = "font:SmallestBoldSystemFont"
         diffTag.color = "0xFFFFFFDD"
-        diffTag.width = int(110 * sf)
+        diffTag.width = int(90 * sf)
 
         diffNum = item.createChild("Label")
-        diffNum.translation = [int(125 * sf), pinkY + int(5 * sf)]
+        diffNum.translation = [int(100 * sf), pinkY + int(5 * sf)]
         diffNum.text = song.difficultyRating.toStr()
-        diffNum.font = "font:SmallBoldSystemFont"
+        diffNum.font = "font:SmallestBoldSystemFont"
         diffNum.color = "0xFFFFFFFF"
-        diffNum.width = int(40 * sf)
+        diffNum.width = int(35 * sf)
 
         artistTag = item.createChild("Label")
-        artistTag.translation = [int(175 * sf), pinkY + int(5 * sf)]
+        artistTag.translation = [int(145 * sf), pinkY + int(5 * sf)]
         artistTag.text = "ARTIST"
-        artistTag.font = "font:SmallBoldSystemFont"
+        artistTag.font = "font:SmallestBoldSystemFont"
         artistTag.color = "0xFFFFFFDD"
-        artistTag.width = int(70 * sf)
+        artistTag.width = int(60 * sf)
 
         artistVal = item.createChild("Label")
-        artistVal.translation = [int(250 * sf), pinkY + int(5 * sf)]
+        artistVal.translation = [int(210 * sf), pinkY + int(5 * sf)]
         artistVal.text = ucase(song.artist)
-        artistVal.font = "font:SmallBoldSystemFont"
+        artistVal.font = "font:SmallestBoldSystemFont"
         artistVal.color = "0xFFFFFFFF"
-        artistVal.width = pinkBodyW - int(260 * sf)
+        artistVal.width = m.cardWidth - arrowDepth - int(220 * sf)
         artistVal.maxLines = 1
 
         starsY = pinkY + m.pinkBarH
         starsBg = item.createChild("Rectangle")
-        starsBg.width = m.cardWidth
+        starsBg.width = m.cardWidth - arrowDepth * 2
         starsBg.height = m.starsBarH
         starsBg.translation = [0, starsY]
         starsBg.color = "0xF0F0F0FF"
